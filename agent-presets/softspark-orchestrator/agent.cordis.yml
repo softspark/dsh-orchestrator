@@ -198,8 +198,8 @@
         backgroundMode: continuable
 
     # Production dsh does not install optional product providers. This staged
-    # bundle registers Claude Code and Gemini ACP on the Host. The two enabled
-    # rows below grant only this preset their static delegation tools; Codex
+    # bundle registers Claude Code on the Host. The enabled row below grants
+    # only this preset its static delegation tool; Codex
     # remains disabled because it is the parent model provider, not a subagent.
     - id: tool-subagent-codex
       name: '@deepseek-ai/dsh-tool-subagent'
@@ -215,14 +215,6 @@
       config:
         provider: claude-code
         toolName: subagent_claude_code
-        backgroundMode: one-shot
-        maxDepth: provider-managed
-
-    - id: tool-subagent-gemini
-      name: '@deepseek-ai/dsh-tool-subagent'
-      config:
-        provider: gemini
-        toolName: subagent_gemini
         backgroundMode: one-shot
         maxDepth: provider-managed
 

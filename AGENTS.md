@@ -2,16 +2,17 @@
 
 ## Purpose
 
-This is a config-only DSH bundle and standard-derived preset. Codex remains the parent model; Claude Code and Gemini CLI are optional, one-shot subagents using their native subscription logins.
+This is a config-only DSH bundle and standard-derived preset. Codex remains the parent model; Claude Code is an optional, one-shot subagent using its native subscription login.
 
 ## Invariants
 
 - Never add provider API keys, custom OAuth, credential-file readers, token forwarding, or fallback HTTP model clients.
-- Keep DSH, Claude Code, and ACP package versions exact until a reviewed compatibility update.
+- Keep DSH and Claude Code package versions exact until a reviewed compatibility update.
 - Keep provider rows on the host plane and delegation tool rows in the preset.
-- Keep `subagent_codex` disabled; this package adds only Claude and Gemini subagents.
-- Preserve `env: {}` for both providers unless the user explicitly approves a reviewed security exception.
-- Claude defaults to `dontAsk`; Gemini defaults to `reject`. Do not weaken permissions implicitly.
+- Keep `subagent_codex` disabled; this package adds only the Claude subagent.
+- Preserve `env: {}` for the Claude provider unless the user explicitly approves a reviewed security exception.
+- Claude defaults to `dontAsk`. Do not weaken permissions implicitly.
+- Do not add Gemini CLI, ACP, Antigravity, Google OAuth, proxy, or token integration without an official terms-safe third-party protocol and a new ADR.
 - Never hand-edit `.claude/constitution.md` or generated `.claude/`, `.codex/`, and `.agents/` files. Regenerate them with ai-toolkit.
 - Do not modify vendor authentication state or an active DSH profile during repository tests.
 

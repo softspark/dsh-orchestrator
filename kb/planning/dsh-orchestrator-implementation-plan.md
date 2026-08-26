@@ -12,7 +12,7 @@ description: "Tracks the public SoftSpark module foundation and release readines
 
 ## Objective
 
-Ship a public, config-only DSH bundle that exposes native Claude Code and Gemini CLI subscription-backed subagents without accepting provider credentials.
+Ship a public, config-only DSH bundle that exposes native Claude Code subscription-backed delegation without accepting provider credentials.
 
 ## Success criteria
 
@@ -21,7 +21,7 @@ Ship a public, config-only DSH bundle that exposes native Claude Code and Gemini
 - Published files contain only the preset, patch, public documentation, and license notices.
 - Tests cover composition, preset enablement, no-key policy, lifecycle-script policy, and version sync.
 - Source, dependency, signature, permission, SARIF, package, and multi-OS CI gates pass.
-- Isolated-profile smoke tests exercise both native logins without provider API keys.
+- Isolated-profile smoke tests exercise the supported Claude native login without provider API keys.
 
 ## Phases
 
@@ -31,20 +31,19 @@ Ship a public, config-only DSH bundle that exposes native Claude Code and Gemini
 | 2 | Public repository governance and Apache notices | complete |
 | 3 | Deterministic validation, tests, audit, and CI | complete |
 | 4 | Exact lockfile and dependency/signature audit | complete |
-| 5 | Isolated DSH profile, preset, and bridge smoke | in progress: composition works; vendor logins pending |
+| 5 | Isolated DSH profile, preset, bridge, and Claude Max delegation smoke | complete |
 | 6 | Tag, provenance publish, and post-release verification | pending |
 
 ## Release blockers
 
-- Claude Code native login must be active.
-- Gemini CLI native login must be active and ACP-capable.
-- The isolated DSH profile must load both providers and return exact marker prompts.
 - Every release command in `kb/procedures/sop-release.md` must pass from a clean checkout.
 
 ## Evidence
 
-- 11/11 tests pass with 100 percent line and 91.67 percent branch coverage.
+- 11/11 tests pass with 100 percent line and 91.30 percent branch coverage.
 - Source audit, SARIF, permission audit, and dependency audit report zero findings.
-- 459 dependencies have verified registry signatures and 58 have verified attestations.
-- Tarball: 11.6 kB, SHA-256 `7c3f6af2fde0f0b48f0f1d8fcb5072d5eb862359a4634eab5db3ac8f28cb12fc`.
+- 457 dependencies have verified registry signatures and 57 have verified attestations.
+- Tarball: 11.6 kB, SHA-256 `aef37276aacfb40a1d54e8e473c1b9d835e96c83ebe29a8b776c97ff541e9011`.
 - The isolated DSH profile discovers `softspark-orchestrator` as the default preset and the Codex dynamic bridge completes a real `todo_write` roundtrip.
+- Codex delegated a standalone marker task to Claude Max and completed the parent turn with the expected orchestration marker, with provider API keys absent.
+- Google delegation is intentionally excluded until Google offers a terms-safe third-party protocol.

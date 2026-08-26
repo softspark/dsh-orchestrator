@@ -2,53 +2,43 @@
 title: "dsh-orchestrator Common Issues"
 category: troubleshooting
 service: dsh-orchestrator
-tags: [troubleshooting, dsh, claude-code, gemini, acp]
+tags: [troubleshooting, dsh, claude-code, google]
 created: "2026-08-26"
 last_updated: "2026-08-26"
-description: "Diagnoses Node, native login, ACP, permission, provider, and preset failures."
+description: "Diagnoses Claude login, Google compatibility, permission, provider, and preset failures."
 ---
 
 # dsh-orchestrator Common Issues
 
-## Gemini reports an ESM syntax error
+## The Google delegation tool is absent
 
-**Symptoms:** Gemini exits before ACP initialization with `Unexpected token import`, or `node --version` reports an old release.
+**Symptoms:** The preset contains no `subagent_gemini` or Antigravity tool.
 
-**Root cause:** The `gemini` shebang resolved an unsupported Node executable from the DSH launch `PATH`.
+**Root cause:** This is intentional. Gemini CLI no longer serves individual Google AI Pro/Ultra accounts. Antigravity has no ACP and its account terms prohibit third-party orchestration.
 
 **Resolution:**
 
-```bash
-command -v node
-node --version
-command -v gemini
-gemini --version
-```
+Use Antigravity directly, or wait for Google to publish an official terms-safe protocol. Do not proxy Google OAuth, copy tokens, or add a headless Antigravity wrapper.
 
-Launch DSH from a shell where Node 22 precedes older system installations.
-
-**Prevention:** Keep CI and the DSH launcher on Node 22.19.0 or newer.
+**Prevention:** Keep the Google exclusion asserted in tests and revisit it only through an ADR plus legal/security review.
 
 ## A vendor login page opens
 
 **Symptoms:** The child asks to authenticate instead of returning a result.
 
-**Root cause:** Native Claude Code or Gemini CLI account state is absent or expired. The bundle cannot authenticate on the child's behalf.
+**Root cause:** Native Claude Code account state is absent or expired. The bundle cannot authenticate on the child's behalf.
 
 **Resolution:** Stop DSH and complete the native login interactively:
 
 ```bash
 claude auth login
-gemini
 ```
-
-For Gemini select `Sign in with Google`, not an API-key flow.
 
 **Prevention:** Run native keyless smoke tests before installing the DSH bundle.
 
 ## Delegation tool is missing
 
-**Symptoms:** The parent has no `subagent_claude_code` or `subagent_gemini` tool.
+**Symptoms:** The parent has no `subagent_claude_code` tool.
 
 **Root cause:** The session uses another preset, the preset was copied to the wrong `DSH_HOME`, or its provider bundle did not load.
 
@@ -58,9 +48,9 @@ For Gemini select `Sign in with Google`, not an API-key flow.
 
 ## A tool request is rejected
 
-**Symptoms:** Claude or Gemini can answer but cannot perform an operation requiring permission.
+**Symptoms:** Claude can answer but cannot perform an operation requiring permission.
 
-**Root cause:** Fail-closed defaults are active. Claude uses `dontAsk` and Gemini ACP uses `reject`.
+**Root cause:** Fail-closed defaults are active. Claude uses `dontAsk`.
 
 **Resolution:** Prefer a standalone task that stays within native policy. Do not forward an API key or weaken permissions as a workaround. A different permission mode requires explicit approval and security review.
 
@@ -70,7 +60,7 @@ For Gemini select `Sign in with Google`, not an API-key flow.
 
 **Symptoms:** The child does not know earlier conversation details.
 
-**Root cause:** Both providers intentionally report `inheritsParentContext: false`.
+**Root cause:** The Claude provider intentionally reports `inheritsParentContext: false`.
 
 **Resolution:** Put all required context, constraints, paths, and expected output into the standalone delegation prompt.
 

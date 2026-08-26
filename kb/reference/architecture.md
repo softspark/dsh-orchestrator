@@ -14,9 +14,9 @@ description: "Architecture of the config-only DSH bundle and its agent preset."
 
 | Plane | File | Responsibility |
 |---|---|---|
-| Host | `cordis.patch.yml` | Registers dormant Claude Code and Gemini ACP providers. |
+| Host | `cordis.patch.yml` | Registers the dormant Claude Code provider. |
 | Agent | `agent-presets/softspark-orchestrator/agent.cordis.yml` | Exposes static delegation tools to sessions selecting this preset. |
-| Vendor | Claude Code and Gemini CLI | Own login state, models, native settings, tools, and product network calls. |
+| Vendor | Claude Code | Owns login state, models, native settings, tools, and product network calls. |
 
 ## Request flow
 

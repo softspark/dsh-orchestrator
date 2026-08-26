@@ -2,10 +2,10 @@
 title: "ADR-001: Native Subscription Subagents"
 category: decisions
 service: dsh-orchestrator
-tags: [dsh, claude-code, gemini, subscriptions]
+tags: [dsh, claude-code, subscriptions, google]
 last_updated: "2026-08-26"
 created: "2026-08-26"
-description: "Use native Claude Code and Gemini CLI processes as DSH subagents without provider API keys."
+description: "Use native Claude Code as a DSH subagent and reject unsupported Google subscription proxying."
 ---
 
 # ADR-001: Native Subscription Subagents
@@ -16,20 +16,20 @@ Accepted.
 
 ## Context
 
-One local DSH window must delegate work to Claude Code and Gemini CLI while each product uses its own paid account. DSH must not receive provider API keys, copy cached credentials, or implement OAuth.
+One local DSH window must delegate work to Claude Code through its paid account. DSH must not receive provider API keys, copy cached credentials, or implement OAuth. Google AI Pro/Ultra moved from Gemini CLI to Antigravity, which has no ACP and prohibits third-party use of account login. See the [Gemini CLI transition](https://github.com/google-gemini/gemini-cli/discussions/28017), [Antigravity ACP request](https://github.com/google-antigravity/antigravity-cli/issues/31), and [Antigravity Terms](https://antigravity.google/terms).
 
 ## Decision
 
-Register the official DSH Claude Code provider and the DSH ACP provider on the host plane. Run Gemini CLI as an ACP server through the portable `gemini --acp` command under a verified Node 22 PATH. Expose two static, one-shot tools from a standard-derived preset:
+Register the official DSH Claude Code provider on the host plane. Expose one static, one-shot tool from a standard-derived preset:
 
 - `subagent_claude_code`, provider `claude-code`, permission mode `dontAsk`.
-- `subagent_gemini`, provider `gemini`, ACP permission policy `reject`.
+- No Google tool. Revisit only after Google provides a terms-safe protocol intended for third-party orchestration.
 
-Both provider configurations use `env: {}`. Vendor CLIs remain the only owners of account login and credential persistence.
+The Claude provider uses `env: {}`. Claude Code remains the only owner of account login and credential persistence.
 
 ## Consequences
 
-- Native subscription access requires a completed vendor login before DSH starts.
+- Native subscription access requires a completed Claude login before DSH starts.
 - Each delegation receives a standalone task and workspace path, not parent conversation state.
 - Each call creates a fresh child process and product session.
 - Interactive permission prompts cannot block DSH. Requests that need approval fail closed.

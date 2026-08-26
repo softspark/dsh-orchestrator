@@ -15,6 +15,5 @@ test('publishable configuration contains no credential input', () => {
 test('provider permissions stay fail-closed', () => {
   const patch = contents.find(([path]) => path === 'cordis.patch.yml')[1];
   assert.match(patch, /permissionMode: dontAsk/u);
-  assert.match(patch, /permission: reject/u);
-  assert.doesNotMatch(patch, /bypassPermissions|permission: allow/u);
+  assert.doesNotMatch(patch, /bypassPermissions|permission: allow|gemini|acp/iu);
 });

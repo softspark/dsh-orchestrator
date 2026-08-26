@@ -14,7 +14,7 @@ if (manifest.private === true) throw new Error('publishable package cannot be pr
 if (manifest.engines?.node !== '>=22.19.0') throw new Error('Node engine must match the supported DSH baseline');
 if (manifest.dsh?.bundle?.patch !== './cordis.patch.yml') throw new Error('DSH bundle patch declaration missing');
 if (manifest.peerDependencies?.['@deepseek-ai/dsh'] !== '0.1.1-rc.2') throw new Error('DSH peer must be exact');
-for (const dependency of ['@deepseek-ai/dsh-subagent-acp', '@deepseek-ai/dsh-subagent-claude-code']) {
+for (const dependency of ['@deepseek-ai/dsh-subagent-claude-code']) {
   if (manifest.dependencies?.[dependency] !== '0.1.1-rc.2') throw new Error(`${dependency} must be exact`);
 }
 for (const lifecycle of ['preinstall', 'install', 'postinstall', 'prepare', 'prepublish', 'prepublishOnly', 'postpublish']) {

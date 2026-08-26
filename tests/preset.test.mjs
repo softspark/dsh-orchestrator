@@ -12,14 +12,14 @@ function row(id, nextId) {
   return preset.slice(start, next === -1 ? preset.length : next);
 }
 
-test('preset enables Claude and Gemini only', () => {
+test('preset enables only the external Claude provider', () => {
   assert.match(row('tool-subagent-codex', 'tool-subagent-claude-code'), /disabled: true/u);
-  assert.doesNotMatch(row('tool-subagent-claude-code', 'tool-subagent-gemini'), /disabled: true/u);
-  assert.doesNotMatch(row('tool-subagent-gemini', 'workflow-worker-thread'), /disabled: true/u);
+  assert.doesNotMatch(row('tool-subagent-claude-code', 'workflow-worker-thread'), /disabled: true/u);
+  assert.doesNotMatch(preset, /tool-subagent-gemini|subagent_gemini/u);
 });
 
 test('external tools are one-shot and provider-managed', () => {
-  for (const block of [row('tool-subagent-claude-code', 'tool-subagent-gemini'), row('tool-subagent-gemini', 'workflow-worker-thread')]) {
+  for (const block of [row('tool-subagent-claude-code', 'workflow-worker-thread')]) {
     assert.match(block, /backgroundMode: one-shot/u);
     assert.match(block, /maxDepth: provider-managed/u);
   }

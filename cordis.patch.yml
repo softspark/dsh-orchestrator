@@ -1,4 +1,4 @@
-# Host-plane providers only. Installing the bundle starts neither product.
+# Host-plane providers only. Installing the bundle starts no vendor process.
 # The standard-derived preset separately decides which delegation tools exist.
 - insert:
     - id: subagent-claude-code
@@ -6,13 +6,4 @@
       config:
         providerName: claude-code
         permissionMode: dontAsk
-        env: {}
-
-    - id: subagent-gemini-acp
-      name: '@deepseek-ai/dsh-subagent-acp'
-      config:
-        providerName: gemini
-        command: gemini
-        args: [--acp]
-        permission: reject
         env: {}

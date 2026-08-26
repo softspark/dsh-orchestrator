@@ -16,13 +16,13 @@ SoftSpark will acknowledge a report within 48 hours and coordinate remediation a
 
 ### Credentials
 
-Claude Code and Gemini CLI own login, refresh, credential storage, and account state. This package neither reads credential files nor accepts tokens, cookies, authorization headers, provider API keys, or OAuth configuration.
+Claude Code owns login, refresh, credential storage, and account state. This package neither reads credential files nor accepts tokens, cookies, authorization headers, provider API keys, or OAuth configuration.
 
-Both provider rows use `env: {}`. Credential-shaped ambient environment variables are scrubbed by the DSH subprocess boundary before explicit configuration is applied.
+The Claude provider row uses `env: {}`. Credential-shaped ambient environment variables are scrubbed by the DSH subprocess boundary before explicit configuration is applied.
 
 ### Permissions
 
-Claude runs with `permissionMode: dontAsk`. Gemini ACP runs with `permission: reject`. Requests that still need human approval fail closed. Changing Claude to `bypassPermissions` or Gemini to `allow` requires explicit user approval and a separate security review.
+Claude runs with `permissionMode: dontAsk`. Requests that still need human approval fail closed. Changing Claude to `bypassPermissions` requires explicit user approval and a separate security review.
 
 ### Process and workspace
 
@@ -30,7 +30,11 @@ The official providers start fresh child processes in the parent workspace and o
 
 ### Network and telemetry
 
-The package contains configuration only and adds no model HTTP client, telemetry, analytics, crash upload, or remote logger. Claude Code, Gemini CLI, DSH, and their upstream services retain their own network and telemetry behavior.
+The package contains configuration only and adds no model HTTP client, telemetry, analytics, crash upload, or remote logger. Claude Code, DSH, and their upstream services retain their own network and telemetry behavior.
+
+### Google exclusion
+
+The package intentionally contains no Gemini CLI, ACP, Antigravity, Google OAuth, proxy, or token integration. Individual Gemini CLI access is discontinued, Antigravity lacks ACP, and Antigravity account terms prohibit third-party orchestration. Do not add a Google provider without an official protocol and dedicated legal/security review.
 
 ## Scope
 

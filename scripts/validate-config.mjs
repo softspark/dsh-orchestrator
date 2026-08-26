@@ -10,14 +10,11 @@ if (/(ANTHROPIC_API_KEY|GEMINI_API_KEY|GOOGLE_API_KEY|GOOGLE_APPLICATION_CREDENT
 for (const expected of [
   'providerName: claude-code',
   'permissionMode: dontAsk',
-  'providerName: gemini',
-  'command: gemini',
-  'args: [--acp]',
-  'permission: reject',
 ]) {
   if (!patch.includes(expected)) throw new Error(`provider patch missing: ${expected}`);
 }
-if ((patch.match(/env: \{\}/g) ?? []).length !== 2) throw new Error('both providers must use empty explicit env overlays');
+if ((patch.match(/env: \{\}/g) ?? []).length !== 1) throw new Error('Claude provider must use an empty explicit env overlay');
+if (/gemini|acp/i.test(patch)) throw new Error('unsupported Google provider must not be registered');
 
 function row(id, nextId) {
   const start = preset.indexOf(`- id: ${id}`);
@@ -27,12 +24,11 @@ function row(id, nextId) {
 }
 
 const codex = row('tool-subagent-codex', 'tool-subagent-claude-code');
-const claude = row('tool-subagent-claude-code', 'tool-subagent-gemini');
-const gemini = row('tool-subagent-gemini', 'workflow-worker-thread');
+const claude = row('tool-subagent-claude-code', 'workflow-worker-thread');
 if (!codex.includes('disabled: true')) throw new Error('Codex subagent must remain disabled');
 if (claude.includes('disabled: true') || !claude.includes('provider: claude-code') || !claude.includes('toolName: subagent_claude_code')) throw new Error('Claude tool row invalid');
-if (gemini.includes('disabled: true') || !gemini.includes('provider: gemini') || !gemini.includes('toolName: subagent_gemini')) throw new Error('Gemini tool row invalid');
-for (const block of [claude, gemini]) if (!block.includes('maxDepth: provider-managed')) throw new Error('external providers require provider-managed depth');
+if (!claude.includes('maxDepth: provider-managed')) throw new Error('external providers require provider-managed depth');
+if (/tool-subagent-gemini|subagent_gemini/.test(preset)) throw new Error('unsupported Gemini tool must not be present');
 
 const ids = [...preset.matchAll(/^\s*- id:\s*(\S+)\s*$/gm)].map((match) => match[1]);
 const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);

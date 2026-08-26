@@ -15,8 +15,7 @@ description: "Install the local bundle and preset after completing native vendor
 - Node.js `22.19.0` or newer within major 22.
 - DSH `0.1.1-rc.2`.
 - Claude Code signed in through `claude auth login`.
-- Gemini CLI `0.55.1` signed in with the Google account carrying the intended subscription.
-- No Anthropic, Gemini, or Google API key is required.
+- No Anthropic API key is required.
 
 ## Steps
 
@@ -47,12 +46,12 @@ Restart the `web` profile, create a new session, and select `SoftSpark Orchestra
 
 ## Verification
 
-Confirm that the parent sees `subagent_claude_code` and `subagent_gemini`. Delegate a read-only marker prompt to each provider. A login prompt means the corresponding vendor CLI must be authenticated interactively outside DSH.
+Confirm that the parent sees `subagent_claude_code`. Delegate a read-only marker prompt. A login prompt means Claude Code must be authenticated interactively outside DSH.
 
 ## Troubleshooting
 
 | Problem | Resolution |
 |---|---|
-| Gemini starts under an old Node | Launch DSH with a PATH where `gemini` resolves through Node 22. |
+| Google tool is absent | Expected: no terms-safe individual Google provider is currently registered. |
 | Permission request fails | Expected under fail-closed defaults; adjust native settings, not provider keys. |
 | Tool is absent | Select the `softspark-orchestrator` preset in a new session. |
