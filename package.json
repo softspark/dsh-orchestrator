@@ -1,0 +1,43 @@
+{
+  "name": "@softspark/dsh-orchestrator",
+  "version": "0.1.0",
+  "description": "Opt-in DSH orchestration bundle for subscription-backed Claude Code and Gemini CLI subagents.",
+  "keywords": ["deepseek-harness", "dsh-plugin", "claude-code", "gemini-cli", "acp", "llm", "agent"],
+  "homepage": "https://github.com/softspark/dsh-orchestrator#readme",
+  "repository": { "type": "git", "url": "git+https://github.com/softspark/dsh-orchestrator.git" },
+  "bugs": { "url": "https://github.com/softspark/dsh-orchestrator/issues" },
+  "funding": "https://softspark.eu",
+  "license": "Apache-2.0",
+  "author": "SoftSpark <biuro@softspark.eu>",
+  "type": "module",
+  "sideEffects": false,
+  "files": ["agent-presets", "cordis.patch.yml", "README.md", "CHANGELOG.md", "LICENSE", "NOTICE"],
+  "engines": { "node": ">=22.19.0" },
+  "packageManager": "npm@11.13.0",
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" },
+  "installConfig": { "ignore-scripts": true },
+  "dsh": { "bundle": { "patch": "./cordis.patch.yml" } },
+  "scripts": {
+    "lint": "node --check scripts/*.mjs && node --check tests/*.test.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:coverage": "node --test --experimental-test-coverage tests/*.test.mjs",
+    "validate:kb": "node scripts/validate-kb.mjs",
+    "validate:license": "node scripts/validate-license.mjs",
+    "validate:package": "node scripts/validate-package.mjs",
+    "validate:config": "node scripts/validate-config.mjs",
+    "verify:required-files": "node scripts/verify-required-files.mjs",
+    "verify:version": "node scripts/verify-version-sync.mjs",
+    "verify": "npm run verify:required-files && npm run verify:version && npm run validate:kb && npm run validate:license && npm run validate:package && npm run validate:config",
+    "audit": "node scripts/audit.mjs --ci",
+    "audit:sarif": "node scripts/audit.mjs --sarif",
+    "audit:permissions": "node scripts/audit.mjs --permissions",
+    "audit:dependencies": "npm audit --audit-level=high --ignore-scripts",
+    "audit:signatures": "npm audit signatures",
+    "package:check": "npm pack --dry-run --ignore-scripts"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-subagent-acp": "0.1.1-rc.2",
+    "@deepseek-ai/dsh-subagent-claude-code": "0.1.1-rc.2"
+  },
+  "peerDependencies": { "@deepseek-ai/dsh": "0.1.1-rc.2" }
+}

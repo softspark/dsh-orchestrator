@@ -1,0 +1,17 @@
+node_modules/
+.agents/
+.claude/
+.codex/
+.idea/
+.vscode/
+*.tgz
+*.log
+*.key
+*.pem
+*.p12
+*.tsbuildinfo
+.DS_Store
+.env
+.env.*
+!.env.example
+audit.sarif

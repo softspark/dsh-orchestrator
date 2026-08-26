@@ -1,0 +1,50 @@
+name: Publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Verify and publish to npm
+    runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: write
+      id-token: write
+      security-events: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.19.0'
+          cache: npm
+          registry-url: https://registry.npmjs.org
+          scope: '@softspark'
+      - run: npm ci --ignore-scripts
+      - run: npm run verify
+      - run: npm run verify:version -- --tag "${GITHUB_REF_NAME}"
+      - run: npm run lint
+      - run: npm run test:coverage
+      - run: npm run audit:dependencies
+      - run: npm run audit:signatures
+      - run: npm run audit
+      - name: Generate SARIF
+        run: npm run audit:sarif > audit.sarif
+      - uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: audit.sarif
+      - run: npm run package:check
+      - name: Publish public package with provenance
+        run: npm publish --provenance --access public --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@fe965f7af51af5f2602596916f38a38df2e33de0
+        with:
+          generate_release_notes: true

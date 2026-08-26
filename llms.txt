@@ -1,0 +1,28 @@
+# SoftSpark DSH Orchestrator
+
+> Config-only DSH bundle exposing native Claude Code and Gemini CLI subscription-backed subagents.
+
+## Primary files
+
+- README.md: setup, native login prerequisites, policy, and removal.
+- cordis.patch.yml: host-plane provider registration.
+- agent-presets/softspark-orchestrator/agent.cordis.yml: standard-derived tool composition.
+- kb/decisions/adr-001-subscription-subagents.md: architecture decision.
+- kb/reference/configuration.md: exact configuration contract.
+- kb/reference/security.md: trust boundaries and failure policy.
+- kb/howto/setup.md: installation guide.
+- kb/procedures/: pre-commit, release, and post-release SOPs.
+
+## Hard constraints
+
+- No provider API keys or custom OAuth.
+- Native vendor login state remains vendor-owned.
+- Claude `dontAsk`; Gemini ACP `reject`.
+- DSH compatibility pinned to 0.1.1-rc.2.
+
+## Verified evidence
+
+- 11/11 tests; 100 percent line and 91.67 percent branch coverage.
+- Zero source, dependency, SARIF, permission, or lifecycle findings.
+- 459 verified registry signatures and 58 attestations.
+- Isolated DSH loads this preset by default and completes a Codex-to-DSH tool roundtrip.
