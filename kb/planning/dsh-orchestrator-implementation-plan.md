@@ -34,7 +34,7 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 | 4 | Exact lockfile and dependency/signature audit | complete |
 | 5 | Isolated DSH profile, preset, bridge, and Claude Max delegation smoke | complete |
 | 6 | GitHub Copilot ACP provider, Gemini smoke, ADR, and security evidence | complete |
-| 7 | Tag, provenance publish, and post-release verification | pending |
+| 7 | Tag, provenance publish, and post-release verification | complete |
 
 ## Release blockers
 
@@ -44,9 +44,11 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 
 - 12/12 tests pass with 100 percent line and 92.59 percent branch coverage.
 - Source audit, SARIF, permission audit, and dependency audit report zero findings.
-- 459 dependencies have verified registry signatures and 58 have verified attestations.
-- Tarball: 12.2 kB, SHA-256 `67ac3e9740828a9614da4b044020049d14d12e5710f9b8a74ddea7a733b679be`.
+- Repository graph: 459 dependencies have verified registry signatures and 58 have verified attestations.
+- Published package: `@softspark/dsh-orchestrator@1.0.0`, 12.6 kB, shasum `2aa5f556b999a311529592448d2e5c35c9cb3507`, SLSA provenance v1.
+- Clean registry install: 460 verified signatures, 59 attestations, and 0 vulnerabilities.
 - The isolated DSH profile discovers `softspark-orchestrator` as the default preset and the Codex dynamic bridge completes a real `todo_write` roundtrip.
 - Codex delegated a standalone marker task to Claude Max and completed the parent turn with the expected orchestration marker, with provider API keys absent.
 - Codex called `subagent_gemini_copilot`, the child returned `GEMINI_COPILOT_CHILD_OK`, and the parent completed with `CODEX_GEMINI_ORCHESTRATION_OK`.
+- Post-release cancellation accepted the request and ended the delegated turn as `aborted`; the process tree was quiescent after shutdown.
 - Direct Google integration remains excluded; the supported Gemini route is GitHub Copilot's official ACP server.
