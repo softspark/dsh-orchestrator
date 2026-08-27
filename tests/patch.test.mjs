@@ -4,6 +4,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const patch = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
+const crlfPatch = patch.replaceAll(/\r?\n/gu, '\r\n');
 
 test('host patch registers Claude and official Copilot ACP providers', () => {
   assert.match(patch, /providerName: claude-code/u);
@@ -24,7 +25,9 @@ test('host patch registers Claude and official Copilot ACP providers', () => {
     '--max-ai-credits=30',
     '--model=gemini-3.6-flash',
   ]) {
-    assert.match(patch, new RegExp(`- ${argument.replaceAll('.', '\\.')}(?:\\n|$)`, 'u'));
+    const pattern = new RegExp(`- ${argument.replaceAll('.', '\\.')}(?:\\r?\\n|$)`, 'u');
+    assert.match(patch, pattern);
+    assert.match(crlfPatch, pattern);
   }
   assert.match(patch, /permission: reject/u);
   assert.equal((patch.match(/env: \{\}/gu) ?? []).length, 2);

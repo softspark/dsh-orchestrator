@@ -74,7 +74,7 @@ jobs:
       - run: npm run audit
       - run: npm run audit:permissions
       - name: Generate SARIF
-        run: npm run audit:sarif > audit.sarif
+        run: node scripts/audit.mjs --sarif > audit.sarif
       - uses: actions/upload-artifact@v4
         if: always()
         with:

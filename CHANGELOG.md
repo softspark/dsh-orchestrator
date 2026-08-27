@@ -19,3 +19,8 @@ All notable changes follow Keep a Changelog and Semantic Versioning.
 ### Changed
 
 - Reintroduced Gemini only through GitHub Copilot's official ACP server; direct Google, Gemini CLI, and Antigravity routes remain excluded.
+
+### Fixed
+
+- CI and publish workflows now write raw SARIF JSON without npm lifecycle output prefixes.
+- Provider-argument tests accept Git's CRLF checkout on Windows.

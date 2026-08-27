@@ -35,7 +35,7 @@ jobs:
       - run: npm run audit:signatures
       - run: npm run audit
       - name: Generate SARIF
-        run: npm run audit:sarif > audit.sarif
+        run: node scripts/audit.mjs --sarif > audit.sarif
       - uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: audit.sarif
