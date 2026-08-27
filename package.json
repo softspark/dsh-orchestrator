@@ -2,7 +2,7 @@
   "name": "@softspark/dsh-orchestrator",
   "version": "0.1.0",
   "description": "Opt-in DSH orchestration bundle for subscription-backed Claude Code and GitHub Copilot delegation.",
-  "keywords": ["deepseek-harness", "dsh-plugin", "claude-code", "github-copilot", "gemini", "acp", "llm", "agent"],
+  "keywords": ["deepseek-harness", "dsh-plugin", "dsh", "claude-code", "github-copilot", "gemini", "acp", "llm", "agent"],
   "homepage": "https://github.com/softspark/dsh-orchestrator#readme",
   "repository": { "type": "git", "url": "git+https://github.com/softspark/dsh-orchestrator.git" },
   "bugs": { "url": "https://github.com/softspark/dsh-orchestrator/issues" },

@@ -2,10 +2,11 @@
 
 [![CI](https://github.com/softspark/dsh-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/softspark/dsh-orchestrator/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![DSH community plugin](https://img.shields.io/badge/DSH-community%20plugin-4b8bbe.svg)](https://github.com/topics/dsh-plugin)
 
 `@softspark/dsh-orchestrator` is a config-only DeepSeek Harness bundle and agent preset. It lets one DSH parent delegate standalone tasks to Claude Code through its native Max/Pro login and to Gemini through the official GitHub Copilot CLI ACP server.
 
-The package does not implement OAuth, read credential files, accept provider API keys, or call model APIs directly. It is a SoftSpark integration and is not affiliated with or endorsed by Anthropic, DeepSeek, GitHub, Google, or Microsoft.
+The package does not implement OAuth, read credential files, accept provider API keys, or call model APIs directly. It is an independently maintained SoftSpark community integration. It is unofficial and is not affiliated with or endorsed by Anthropic, DeepSeek, GitHub, Google, or Microsoft.
 
 ## Status
 
@@ -70,6 +71,24 @@ cp -R agent-presets/softspark-orchestrator "$PRESET_ROOT/softspark-orchestrator"
 ```
 
 Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing sessions keep the preset generation with which they started.
+
+## Install a published release
+
+After the first public npm release, install the exact reviewed version and copy its preset into the profile's user preset root:
+
+```bash
+dsh plugin --profile web add @softspark/dsh-orchestrator@0.1.0 --save-exact
+
+DSH_ROOT="${DSH_HOME:-$HOME/.dsh}"
+PROFILE_ROOT="$DSH_ROOT/profiles/web"
+PRESET_ROOT="$DSH_ROOT/.agent-presets"
+test ! -e "$PRESET_ROOT/softspark-orchestrator"
+mkdir -p "$PRESET_ROOT"
+cp -R "$PROFILE_ROOT/node_modules/@softspark/dsh-orchestrator/agent-presets/softspark-orchestrator" \
+  "$PRESET_ROOT/softspark-orchestrator"
+```
+
+DSH `0.1.1-rc.2` discovers user presets only from configured roots and `$DSH_HOME/.agent-presets`; installing a bundle does not automatically add its embedded preset directory. Restart DSH, then select `SoftSpark Orchestrator` for a new session.
 
 ## Configuration
 

@@ -14,6 +14,7 @@ All notable changes follow Keep a Changelog and Semantic Versioning.
 - GitHub Copilot CLI ACP provider pinned to Gemini 3.6 Flash with keyless GitHub subscription authentication.
 - Fail-closed `subagent_gemini_copilot` one-shot tool with no child tools, remote export, built-in MCP servers, custom instructions, or auto-update.
 - ADR-002 and public setup, security, troubleshooting, and release evidence for the Copilot route.
+- Public community-plugin badge, DSH discovery metadata, and pinned npm installation instructions including preset activation.
 
 ### Changed
 
