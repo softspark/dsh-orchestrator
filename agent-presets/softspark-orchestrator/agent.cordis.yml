@@ -197,10 +197,10 @@
         toolName: subagent_fork
         backgroundMode: continuable
 
-    # Production dsh does not install optional product providers. This staged
-    # bundle registers Claude Code on the Host. The enabled row below grants
-    # only this preset its static delegation tool; Codex
-    # remains disabled because it is the parent model provider, not a subagent.
+    # Production dsh does not install optional product providers. This bundle
+    # registers Claude Code and the official GitHub Copilot ACP server on the
+    # Host. The enabled rows below grant only this preset their static tools;
+    # Codex remains disabled because it is the parent provider, not a subagent.
     - id: tool-subagent-codex
       name: '@deepseek-ai/dsh-tool-subagent'
       disabled: true
@@ -215,6 +215,14 @@
       config:
         provider: claude-code
         toolName: subagent_claude_code
+        backgroundMode: one-shot
+        maxDepth: provider-managed
+
+    - id: tool-subagent-copilot-gemini
+      name: '@deepseek-ai/dsh-tool-subagent'
+      config:
+        provider: copilot-gemini
+        toolName: subagent_gemini_copilot
         backgroundMode: one-shot
         maxDepth: provider-managed
 

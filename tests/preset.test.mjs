@@ -12,14 +12,20 @@ function row(id, nextId) {
   return preset.slice(start, next === -1 ? preset.length : next);
 }
 
-test('preset enables only the external Claude provider', () => {
+test('preset enables Claude and Copilot Gemini providers', () => {
   assert.match(row('tool-subagent-codex', 'tool-subagent-claude-code'), /disabled: true/u);
-  assert.doesNotMatch(row('tool-subagent-claude-code', 'workflow-worker-thread'), /disabled: true/u);
-  assert.doesNotMatch(preset, /tool-subagent-gemini|subagent_gemini/u);
+  assert.doesNotMatch(row('tool-subagent-claude-code', 'tool-subagent-copilot-gemini'), /disabled: true/u);
+  const gemini = row('tool-subagent-copilot-gemini', 'workflow-worker-thread');
+  assert.doesNotMatch(gemini, /disabled: true/u);
+  assert.match(gemini, /provider: copilot-gemini/u);
+  assert.match(gemini, /toolName: subagent_gemini_copilot/u);
 });
 
 test('external tools are one-shot and provider-managed', () => {
-  for (const block of [row('tool-subagent-claude-code', 'workflow-worker-thread')]) {
+  for (const block of [
+    row('tool-subagent-claude-code', 'tool-subagent-copilot-gemini'),
+    row('tool-subagent-copilot-gemini', 'workflow-worker-thread'),
+  ]) {
     assert.match(block, /backgroundMode: one-shot/u);
     assert.match(block, /maxDepth: provider-managed/u);
   }

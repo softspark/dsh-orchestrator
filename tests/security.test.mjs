@@ -15,5 +15,13 @@ test('publishable configuration contains no credential input', () => {
 test('provider permissions stay fail-closed', () => {
   const patch = contents.find(([path]) => path === 'cordis.patch.yml')[1];
   assert.match(patch, /permissionMode: dontAsk/u);
-  assert.doesNotMatch(patch, /bypassPermissions|permission: allow|gemini|acp/iu);
+  assert.match(patch, /permission: reject/u);
+  assert.match(patch, /--available-tools=/u);
+  assert.doesNotMatch(patch, /bypassPermissions|permission: allow|--allow-all|--yolo/iu);
+});
+
+test('Copilot integration uses no direct Google authentication route', () => {
+  const patch = contents.find(([path]) => path === 'cordis.patch.yml')[1];
+  assert.doesNotMatch(patch, /gemini-cli|antigravity|google oauth|GOOGLE_/iu);
+  assert.match(patch, /command: copilot/u);
 });

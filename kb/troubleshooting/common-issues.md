@@ -2,43 +2,44 @@
 title: "dsh-orchestrator Common Issues"
 category: troubleshooting
 service: dsh-orchestrator
-tags: [troubleshooting, dsh, claude-code, google]
+tags: [troubleshooting, dsh, claude-code, google, github-copilot, gemini]
 created: "2026-08-26"
-last_updated: "2026-08-26"
-description: "Diagnoses Claude login, Google compatibility, permission, provider, and preset failures."
+last_updated: "2026-08-27"
+description: "Diagnoses Claude and Copilot login, model, permission, provider, and preset failures."
 ---
 
 # dsh-orchestrator Common Issues
 
-## The Google delegation tool is absent
+## The Gemini delegation tool is absent
 
-**Symptoms:** The preset contains no `subagent_gemini` or Antigravity tool.
+**Symptoms:** The preset contains `subagent_gemini_copilot`, but DSH cannot start its provider or the tool is missing.
 
-**Root cause:** This is intentional. Gemini CLI no longer serves individual Google AI Pro/Ultra accounts. Antigravity has no ACP and its account terms prohibit third-party orchestration.
+**Root cause:** The official Copilot CLI is not on the DSH process `PATH`, an IDE shim shadows it, the preset is stale, or the provider bundle did not load.
 
 **Resolution:**
 
-Use Antigravity directly, or wait for Google to publish an official terms-safe protocol. Do not proxy Google OAuth, copy tokens, or add a headless Antigravity wrapper.
+Run `copilot --no-auto-update --version` in the same environment that starts DSH. Install and authenticate the official CLI, restart DSH, and create a new session with the refreshed preset.
 
-**Prevention:** Keep the Google exclusion asserted in tests and revisit it only through an ADR plus legal/security review.
+**Prevention:** Keep the official CLI before IDE shims on `PATH` and pin reviewed versions.
 
 ## A vendor login page opens
 
 **Symptoms:** The child asks to authenticate instead of returning a result.
 
-**Root cause:** Native Claude Code account state is absent or expired. The bundle cannot authenticate on the child's behalf.
+**Root cause:** Native Claude Code or GitHub Copilot account state is absent or expired. The bundle cannot authenticate on the child's behalf.
 
 **Resolution:** Stop DSH and complete the native login interactively:
 
 ```bash
 claude auth login
+copilot login
 ```
 
 **Prevention:** Run native keyless smoke tests before installing the DSH bundle.
 
 ## Delegation tool is missing
 
-**Symptoms:** The parent has no `subagent_claude_code` tool.
+**Symptoms:** The parent has no `subagent_claude_code` or `subagent_gemini_copilot` tool.
 
 **Root cause:** The session uses another preset, the preset was copied to the wrong `DSH_HOME`, or its provider bundle did not load.
 
@@ -50,7 +51,7 @@ claude auth login
 
 **Symptoms:** Claude can answer but cannot perform an operation requiring permission.
 
-**Root cause:** Fail-closed defaults are active. Claude uses `dontAsk`.
+**Root cause:** Fail-closed defaults are active. Claude uses `dontAsk`; Copilot rejects ACP permission requests and exposes no tools.
 
 **Resolution:** Prefer a standalone task that stays within native policy. Do not forward an API key or weaken permissions as a workaround. A different permission mode requires explicit approval and security review.
 
@@ -60,11 +61,21 @@ claude auth login
 
 **Symptoms:** The child does not know earlier conversation details.
 
-**Root cause:** The Claude provider intentionally reports `inheritsParentContext: false`.
+**Root cause:** The external providers intentionally report `inheritsParentContext: false`.
 
 **Resolution:** Put all required context, constraints, paths, and expected output into the standalone delegation prompt.
 
 **Prevention:** Treat each child call as a fresh one-shot task.
+
+## Copilot rejects the Gemini model
+
+**Symptoms:** The child exits with a model-unavailable or policy error.
+
+**Root cause:** `gemini-3.6-flash` is unavailable on the current Copilot plan, is disabled by organization policy, or its preview/availability status changed.
+
+**Resolution:** Verify the model in Copilot CLI and GitHub's supported-model documentation. Change the pinned model only through a reviewed ADR update and compatibility smoke test. Do not substitute a Google API key.
+
+**Prevention:** Run the keyless Copilot marker test before packaging and after vendor policy changes.
 
 ## Dependency or signature audit fails
 

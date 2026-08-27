@@ -2,8 +2,8 @@
 title: "ADR-001: Native Subscription Subagents"
 category: decisions
 service: dsh-orchestrator
-tags: [dsh, claude-code, subscriptions, google]
-last_updated: "2026-08-26"
+tags: [dsh, claude-code, subscriptions, google, github-copilot]
+last_updated: "2026-08-27"
 created: "2026-08-26"
 description: "Use native Claude Code as a DSH subagent and reject unsupported Google subscription proxying."
 ---
@@ -23,7 +23,7 @@ One local DSH window must delegate work to Claude Code through its paid account.
 Register the official DSH Claude Code provider on the host plane. Expose one static, one-shot tool from a standard-derived preset:
 
 - `subagent_claude_code`, provider `claude-code`, permission mode `dontAsk`.
-- No Google tool. Revisit only after Google provides a terms-safe protocol intended for third-party orchestration.
+- No direct Google tool. GitHub Copilot's later official ACP route is governed separately by [ADR-002](adr-002-github-copilot-gemini-acp.md).
 
 The Claude provider uses `env: {}`. Claude Code remains the only owner of account login and credential persistence.
 

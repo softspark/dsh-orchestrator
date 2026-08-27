@@ -2,17 +2,17 @@
 
 ## Purpose
 
-This is a config-only DSH bundle and standard-derived preset. Codex remains the parent model; Claude Code is an optional, one-shot subagent using its native subscription login.
+This is a config-only DSH bundle and standard-derived preset. Codex remains the parent model; Claude Code and GitHub Copilot Gemini are optional, one-shot subagents using their native subscription logins.
 
 ## Invariants
 
 - Never add provider API keys, custom OAuth, credential-file readers, token forwarding, or fallback HTTP model clients.
-- Keep DSH and Claude Code package versions exact until a reviewed compatibility update.
+- Keep DSH, provider, and ACP package versions exact until a reviewed compatibility update.
 - Keep provider rows on the host plane and delegation tool rows in the preset.
-- Keep `subagent_codex` disabled; this package adds only the Claude subagent.
-- Preserve `env: {}` for the Claude provider unless the user explicitly approves a reviewed security exception.
+- Keep `subagent_codex` disabled; this package adds only Claude and Copilot Gemini subagents.
+- Preserve `env: {}` for both external providers unless the user explicitly approves a reviewed security exception.
 - Claude defaults to `dontAsk`. Do not weaken permissions implicitly.
-- Do not add Gemini CLI, ACP, Antigravity, Google OAuth, proxy, or token integration without an official terms-safe third-party protocol and a new ADR.
+- Do not add Gemini CLI, Antigravity, Google OAuth, proxy, or token integration. Gemini is allowed only through GitHub Copilot's official ACP server under ADR-002.
 - Never hand-edit `.claude/constitution.md` or generated `.claude/`, `.codex/`, and `.agents/` files. Regenerate them with ai-toolkit.
 - Do not modify vendor authentication state or an active DSH profile during repository tests.
 

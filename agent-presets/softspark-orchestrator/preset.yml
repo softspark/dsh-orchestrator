@@ -1,2 +1,2 @@
 name: SoftSpark Orchestrator
-description: Standard coding agent with explicit one-shot Claude Code delegation.
+description: Standard coding agent with explicit one-shot Claude Code and Copilot Gemini delegation.

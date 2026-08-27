@@ -10,11 +10,27 @@ if (/(ANTHROPIC_API_KEY|GEMINI_API_KEY|GOOGLE_API_KEY|GOOGLE_APPLICATION_CREDENT
 for (const expected of [
   'providerName: claude-code',
   'permissionMode: dontAsk',
+  "name: '@deepseek-ai/dsh-subagent-acp'",
+  'providerName: copilot-gemini',
+  'command: copilot',
+  '--acp',
+  '--stdio',
+  '--no-auto-update',
+  '--no-custom-instructions',
+  '--no-remote',
+  '--no-remote-export',
+  '--disable-builtin-mcps',
+  '--no-ask-user',
+  '--available-tools=',
+  '--max-ai-credits=30',
+  '--model=gemini-3.6-flash',
+  'permission: reject',
 ]) {
   if (!patch.includes(expected)) throw new Error(`provider patch missing: ${expected}`);
 }
-if ((patch.match(/env: \{\}/g) ?? []).length !== 1) throw new Error('Claude provider must use an empty explicit env overlay');
-if (/gemini|acp/i.test(patch)) throw new Error('unsupported Google provider must not be registered');
+if ((patch.match(/env: \{\}/g) ?? []).length !== 2) throw new Error('external providers must use empty explicit env overlays');
+if (/gemini-cli|antigravity|google oauth|GOOGLE_/i.test(patch)) throw new Error('direct Google authentication routes must not be registered');
+if (/--allow-all|--yolo|permission: allow/i.test(patch)) throw new Error('Copilot provider must remain fail-closed');
 
 function row(id, nextId) {
   const start = preset.indexOf(`- id: ${id}`);
@@ -24,11 +40,13 @@ function row(id, nextId) {
 }
 
 const codex = row('tool-subagent-codex', 'tool-subagent-claude-code');
-const claude = row('tool-subagent-claude-code', 'workflow-worker-thread');
+const claude = row('tool-subagent-claude-code', 'tool-subagent-copilot-gemini');
+const gemini = row('tool-subagent-copilot-gemini', 'workflow-worker-thread');
 if (!codex.includes('disabled: true')) throw new Error('Codex subagent must remain disabled');
 if (claude.includes('disabled: true') || !claude.includes('provider: claude-code') || !claude.includes('toolName: subagent_claude_code')) throw new Error('Claude tool row invalid');
 if (!claude.includes('maxDepth: provider-managed')) throw new Error('external providers require provider-managed depth');
-if (/tool-subagent-gemini|subagent_gemini/.test(preset)) throw new Error('unsupported Gemini tool must not be present');
+if (gemini.includes('disabled: true') || !gemini.includes('provider: copilot-gemini') || !gemini.includes('toolName: subagent_gemini_copilot')) throw new Error('Copilot Gemini tool row invalid');
+if (!gemini.includes('maxDepth: provider-managed')) throw new Error('external providers require provider-managed depth');
 
 const ids = [...preset.matchAll(/^\s*- id:\s*(\S+)\s*$/gm)].map((match) => match[1]);
 const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);

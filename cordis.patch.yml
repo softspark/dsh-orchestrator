@@ -7,3 +7,25 @@
         providerName: claude-code
         permissionMode: dontAsk
         env: {}
+
+    # Official GitHub Copilot CLI ACP server. Authentication remains in the
+    # native CLI credential store; this bundle never accepts or forwards tokens.
+    - id: subagent-copilot-gemini
+      name: '@deepseek-ai/dsh-subagent-acp'
+      config:
+        providerName: copilot-gemini
+        command: copilot
+        args:
+          - --acp
+          - --stdio
+          - --no-auto-update
+          - --no-custom-instructions
+          - --no-remote
+          - --no-remote-export
+          - --disable-builtin-mcps
+          - --no-ask-user
+          - --available-tools=
+          - --max-ai-credits=30
+          - --model=gemini-3.6-flash
+        permission: reject
+        env: {}

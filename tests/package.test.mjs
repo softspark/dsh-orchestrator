@@ -8,6 +8,7 @@ const lock = JSON.parse(await readFile(new URL('../package-lock.json', import.me
 const lifecycle = new Set(['preinstall', 'install', 'postinstall', 'prepare', 'prepack', 'postpack', 'publish', 'postpublish', 'prepublish', 'prepublishOnly']);
 
 test('runtime and peer dependencies are exact', () => {
+  assert.equal(manifest.dependencies['@deepseek-ai/dsh-subagent-acp'], '0.1.1-rc.2');
   assert.equal(manifest.dependencies['@deepseek-ai/dsh-subagent-claude-code'], '0.1.1-rc.2');
   assert.equal(manifest.peerDependencies['@deepseek-ai/dsh'], '0.1.1-rc.2');
 });

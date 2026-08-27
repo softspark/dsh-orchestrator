@@ -3,15 +3,15 @@
 [![CI](https://github.com/softspark/dsh-orchestrator/actions/workflows/ci.yml/badge.svg)](https://github.com/softspark/dsh-orchestrator/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-`@softspark/dsh-orchestrator` is a config-only DeepSeek Harness bundle and agent preset. It lets one DSH parent delegate standalone tasks to Claude Code through its native Max/Pro subscription login.
+`@softspark/dsh-orchestrator` is a config-only DeepSeek Harness bundle and agent preset. It lets one DSH parent delegate standalone tasks to Claude Code through its native Max/Pro login and to Gemini through the official GitHub Copilot CLI ACP server.
 
-The package does not implement OAuth, read credential files, accept provider API keys, or call model APIs directly. It is an official SoftSpark integration and is not affiliated with or endorsed by Anthropic or DeepSeek.
+The package does not implement OAuth, read credential files, accept provider API keys, or call model APIs directly. It is a SoftSpark integration and is not affiliated with or endorsed by Anthropic, DeepSeek, GitHub, Google, or Microsoft.
 
 ## Status
 
 Version `0.1.0` targets DSH `0.1.1-rc.2` and remains pre-release until publication is explicitly approved.
 
-Verified locally: 11/11 tests, 100 percent line coverage, 91.30 percent branch coverage, zero source or dependency findings, 457 verified registry signatures, and 57 attestations. An isolated DSH profile loads this preset as the default, completes a Codex-to-DSH tool roundtrip, and delegates Codex → Claude Max without API keys.
+Verified locally: 12/12 tests, 100 percent line coverage, 92.59 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. An isolated DSH profile completes Codex-to-Claude Max and Codex-to-Copilot-Gemini delegation without provider API keys.
 
 ## Requirements
 
@@ -20,8 +20,9 @@ Verified locally: 11/11 tests, 100 percent line coverage, 91.30 percent branch c
 - `pnpm` for the DSH profile plugin manager.
 - DeepSeek Harness `0.1.1-rc.2`.
 - Claude Code authenticated through `claude auth login`.
+- GitHub Copilot CLI `1.0.80` or a separately reviewed compatible version, authenticated through `copilot login` with an active Copilot plan.
 
-No Anthropic or DeepSeek API key is required by this package.
+No Anthropic, DeepSeek, Google, Gemini, or GitHub API key is required by this package. GitHub Copilot usage consumes the plan's AI credits.
 
 ## Architecture
 
@@ -29,13 +30,15 @@ No Anthropic or DeepSeek API key is required by this package.
 DSH parent session
     |
     +-- subagent_claude_code --> official DSH Claude provider --> Claude Code native login
+    |
+    +-- subagent_gemini_copilot --> official GitHub Copilot ACP --> Gemini 3.6 Flash
 ```
 
-`cordis.patch.yml` registers the dormant Claude host-plane provider. `agent-presets/softspark-orchestrator/agent.cordis.yml` derives from the DSH standard preset and grants only selected sessions its static delegation tool. Installing the bundle starts no vendor process.
+`cordis.patch.yml` registers dormant Claude and Copilot ACP host-plane providers. `agent-presets/softspark-orchestrator/agent.cordis.yml` derives from the DSH standard preset and grants only selected sessions their static delegation tools. Installing the bundle starts no vendor process.
 
-## Google status
+## Gemini route
 
-[Gemini CLI stopped serving individual Google AI Pro/Ultra and free accounts](https://github.com/google-gemini/gemini-cli/discussions/28017) on 2026-06-18. Google directs those users to Antigravity CLI, whose [ACP support remains an open request](https://github.com/google-antigravity/antigravity-cli/issues/31). [Antigravity Terms](https://antigravity.google/terms) also prohibit third-party tools from using the account login. This package therefore registers no Google provider and does not proxy, copy, or reuse Google credentials.
+[Gemini CLI stopped serving individual Google AI Pro/Ultra and free accounts](https://github.com/google-gemini/gemini-cli/discussions/28017) on 2026-06-18. This package still registers no Google provider and does not use Antigravity, Google OAuth, Google AI Pro/Ultra, or Gemini API keys. Gemini runs through [GitHub Copilot CLI's official ACP server](https://docs.github.com/en/copilot/reference/copilot-cli-reference/acp-server), using GitHub authentication, GitHub plan policy, and GitHub AI credits.
 
 ## Source verification
 
@@ -77,6 +80,12 @@ Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing
 | Claude provider | explicit environment | `{}` |
 | Claude tool | background mode | `one-shot` |
 | Claude tool | depth | `provider-managed` |
+| Copilot provider | command | `copilot --acp --stdio` |
+| Copilot provider | model | `gemini-3.6-flash` |
+| Copilot provider | permissions | `reject`, no available tools |
+| Copilot provider | session AI credit cap | `30` |
+| Copilot tool | background mode | `one-shot` |
+| Copilot tool | depth | `provider-managed` |
 
 The optional `subagent_codex` row remains disabled because Codex is the intended parent provider. DSH scrubs credential-shaped ambient variables before spawning children. Native vendor settings and account state remain authoritative.
 
@@ -85,6 +94,7 @@ The optional `subagent_codex` row remains disabled because Codex is the intended
 - No provider credential input or custom OAuth.
 - No npm lifecycle scripts.
 - Claude denies operations that native policy has not already authorized.
+- Copilot receives no tools, rejects permission requests, disables remote export/control, built-in MCP servers, custom instructions, and auto-update.
 - Each delegation receives a standalone task and workspace cwd, not parent conversation history.
 - Child effects completed before cancellation are not rolled back.
 - Prompts and workspace content selected by a child may leave the computer through that vendor CLI.
@@ -100,6 +110,7 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md).
 | [Security](kb/reference/security.md) | Credential and permission boundaries |
 | [Setup](kb/howto/setup.md) | Native login and isolated installation |
 | [Common issues](kb/troubleshooting/common-issues.md) | Login, Google compatibility, and tool discovery failures |
+| [Copilot Gemini ADR](kb/decisions/adr-002-github-copilot-gemini-acp.md) | Terms-safe protocol, model, permissions, and upstream artifact risk |
 | [Release SOP](kb/procedures/sop-release.md) | Versioned publication workflow |
 
 ## License
