@@ -7,6 +7,7 @@ This is a config-only DSH bundle and standard-derived preset. Codex remains the 
 ## Invariants
 
 - Never add provider API keys, custom OAuth, credential-file readers, token forwarding, or fallback HTTP model clients.
+- Start every public SoftSpark module at version `1.0.0`; never tag or publish a `0.x` release.
 - Keep DSH, provider, and ACP package versions exact until a reviewed compatibility update.
 - Keep provider rows on the host plane and delegation tool rows in the preset.
 - Keep `subagent_codex` disabled; this package adds only Claude and Copilot Gemini subagents.

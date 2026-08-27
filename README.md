@@ -10,7 +10,7 @@ The package does not implement OAuth, read credential files, accept provider API
 
 ## Status
 
-Version `0.1.0` targets DSH `0.1.1-rc.2` and remains pre-release until publication is explicitly approved.
+Version `1.0.0` is the first public release and targets DSH `0.1.1-rc.2`.
 
 Verified locally: 12/12 tests, 100 percent line coverage, 92.59 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. An isolated DSH profile completes Codex-to-Claude Max and Codex-to-Copilot-Gemini delegation without provider API keys.
 
@@ -74,10 +74,10 @@ Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing
 
 ## Install a published release
 
-After the first public npm release, install the exact reviewed version and copy its preset into the profile's user preset root:
+Install the exact reviewed version and copy its preset into the profile's user preset root:
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-orchestrator@0.1.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.0 --save-exact
 
 DSH_ROOT="${DSH_HOME:-$HOME/.dsh}"
 PROFILE_ROOT="$DSH_ROOT/profiles/web"

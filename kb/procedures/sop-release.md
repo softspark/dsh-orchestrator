@@ -16,6 +16,7 @@ Publish a reviewed package whose tag, manifest, documentation, and DSH compatibi
 
 ## Prerequisites
 
+- The first public release of every SoftSpark module is `1.0.0`; `0.x` tags and publications are forbidden. Subsequent releases follow Semantic Versioning from the latest published tag.
 - Green `main` branch and clean worktree.
 - Approved compatibility evidence for all exact DSH provider versions.
 - Reviewed provenance and live smoke evidence for the separately installed Copilot CLI version.

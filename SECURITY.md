@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-`@softspark/dsh-orchestrator` has not been published. Version `0.1.0` receives security fixes on `main`.
+Version `1.0.0` receives security fixes on `main`.
 
 ## Reporting a vulnerability
 
