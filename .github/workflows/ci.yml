@@ -75,7 +75,7 @@ jobs:
       - run: npm run audit:permissions
       - name: Generate SARIF
         run: node scripts/audit.mjs --sarif > audit.sarif
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: dsh-orchestrator-audit-sarif
