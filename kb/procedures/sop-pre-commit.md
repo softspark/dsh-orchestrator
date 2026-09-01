@@ -3,7 +3,7 @@ title: "SOP: Pre-Commit Verification"
 category: procedures
 service: dsh-orchestrator
 tags: [sop, pre-commit, verification]
-last_updated: "2026-08-27"
+last_updated: "2026-08-31"
 created: "2026-08-26"
 description: "Required local gates before committing DSH orchestration changes."
 ---
@@ -31,8 +31,9 @@ Prevent invalid composition, licensing, packaging, or credential changes from en
    ```
 
 3. Confirm only intended package files appear in the dry-run tarball.
-4. Confirm `subagent_codex` remains disabled and both external tools retain `maxDepth: provider-managed`.
-5. Confirm Copilot retains `permission: reject`, the empty tool catalog, disabled remote/custom/MCP features, the pinned model, and the AI-credit ceiling.
+4. Confirm the network-free DSH composition test resolves `llm-codex` with the complete config and warns without an earlier dsh-codex layer.
+5. Confirm `subagent_codex` remains disabled and both external tools retain `maxDepth: provider-managed`.
+6. Confirm Copilot retains `permission: reject`, the empty tool catalog, disabled remote/custom/MCP features, the pinned model, and the AI-credit ceiling.
 
 ## Verification
 

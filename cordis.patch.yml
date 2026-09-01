@@ -1,4 +1,21 @@
-# Host-plane providers only. Installing the bundle starts no vendor process.
+# This bundle must follow @softspark/dsh-codex in the profile bundle order.
+# DSH replaces a targeted row's complete config rather than deep-merging it, so
+# keep the full intended static Codex config here. cwd remains provider-defaulted
+# to the DSH process working directory.
+- id: llm-codex
+  name: '@softspark/dsh-codex'
+  config:
+    provider: codex
+    command: codex
+    sandbox: workspace-write
+    approvalPolicy: untrusted
+    allowApiKeyAuth: false
+    experimentalDynamicTools: true
+    dynamicToolTimeoutMs: 600000
+    requestTimeoutMs: 30000
+    turnTimeoutMs: 600000
+
+# Host-plane external providers. Installing the bundle starts no vendor process.
 # The standard-derived preset separately decides which delegation tools exist.
 - insert:
     - id: subagent-claude-code

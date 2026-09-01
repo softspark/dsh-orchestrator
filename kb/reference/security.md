@@ -3,7 +3,7 @@ title: "DSH Orchestrator Security Boundaries"
 category: reference
 service: dsh-orchestrator
 tags: [security, credentials, permissions, github-copilot, gemini]
-last_updated: "2026-08-27"
+last_updated: "2026-08-31"
 created: "2026-08-26"
 description: "Credential, permission, process, and workspace boundaries for child agents."
 ---
@@ -23,6 +23,12 @@ The repository contains no provider key, token, OAuth client, credential path, o
 - Changing Claude to `bypassPermissions` requires explicit user approval and a dedicated security review.
 
 The repository contains no direct Google provider, credentials, proxy, custom OAuth, or headless Antigravity wrapper. Gemini runs as a model hosted behind GitHub Copilot's documented ACP interface and GitHub authentication boundary.
+
+## Codex dynamic-tool bridge
+
+`@softspark/dsh-codex` keeps its standalone `experimentalDynamicTools` default disabled. This bundle must follow dsh-codex in the DSH profile bundle order and replaces the complete `llm-codex` configuration with the reviewed orchestration settings: `workspace-write`, `untrusted`, `allowApiKeyAuth: false`, bounded request/turn/tool timeouts, and `experimentalDynamicTools: true`.
+
+The bridge only exposes the DSH tool catalog to the Codex app-server turn. DSH remains responsible for executing a selected tool and returning its correlated text result; dsh-codex does not call Claude, Copilot, or credentials directly. When no earlier `llm-codex` row exists, DSH warns and skips the override rather than creating a second or incomplete provider. Reordering or changing either bundle requires a new composition test and live subscription-backed smoke test.
 
 ## Process and workspace
 

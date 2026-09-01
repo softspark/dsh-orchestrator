@@ -10,9 +10,9 @@ The package does not implement OAuth, read credential files, accept provider API
 
 ## Status
 
-Version `1.0.0` is the first public release and targets DSH `0.1.1-rc.2`.
+Version `1.0.1` is the current patch release and targets DSH `0.1.1-rc.2`.
 
-Verified locally: 12/12 tests, 100 percent line coverage, 92.59 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. An isolated DSH profile completes Codex-to-Claude Max and Codex-to-Copilot-Gemini delegation without provider API keys.
+Verified locally: 14/14 tests, 100 percent line coverage, 93.75 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override. The release SOP still requires isolated Codex-to-Claude and Codex-to-Copilot-Gemini marker smokes before publication.
 
 ## Requirements
 
@@ -20,6 +20,7 @@ Verified locally: 12/12 tests, 100 percent line coverage, 92.59 percent branch c
 - npm for repository verification.
 - `pnpm` for the DSH profile plugin manager.
 - DeepSeek Harness `0.1.1-rc.2`.
+- `@softspark/dsh-codex@1.0.0` installed before this bundle when Codex is the parent.
 - Claude Code authenticated through `claude auth login`.
 - GitHub Copilot CLI `1.0.80` or a separately reviewed compatible version, authenticated through `copilot login` with an active Copilot plan.
 
@@ -35,7 +36,15 @@ DSH parent session
     +-- subagent_gemini_copilot --> official GitHub Copilot ACP --> Gemini 3.6 Flash
 ```
 
-`cordis.patch.yml` registers dormant Claude and Copilot ACP host-plane providers. `agent-presets/softspark-orchestrator/agent.cordis.yml` derives from the DSH standard preset and grants only selected sessions their static delegation tools. Installing the bundle starts no vendor process.
+`cordis.patch.yml` enables the opt-in dynamic-tool bridge on the existing
+`llm-codex` row, then registers dormant Claude and Copilot ACP host-plane
+providers. `agent-presets/softspark-orchestrator/agent.cordis.yml` derives from
+the DSH standard preset and grants only selected sessions their static
+delegation tools. Installing the bundle starts no vendor process.
+
+DSH applies bundle patches in profile order. Install dsh-codex before
+dsh-orchestrator. The Codex provider remains safe with dynamic tools disabled
+when it is installed without this orchestration bundle.
 
 ## Gemini route
 
@@ -62,6 +71,7 @@ npm run package:check
 Use an isolated `DSH_HOME` before modifying a regular profile.
 
 ```bash
+dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
 dsh plugin --profile web add "file:$(pwd)"
 
 PRESET_ROOT="${DSH_HOME:-$HOME/.dsh}/.agent-presets"
@@ -77,7 +87,8 @@ Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing
 Install the exact reviewed version and copy its preset into the profile's user preset root:
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.1 --save-exact
 
 DSH_ROOT="${DSH_HOME:-$HOME/.dsh}"
 PROFILE_ROOT="$DSH_ROOT/profiles/web"
@@ -90,10 +101,20 @@ cp -R "$PROFILE_ROOT/node_modules/@softspark/dsh-orchestrator/agent-presets/soft
 
 DSH `0.1.1-rc.2` discovers user presets only from configured roots and `$DSH_HOME/.agent-presets`; installing a bundle does not automatically add its embedded preset directory. Restart DSH, then select `SoftSpark Orchestrator` for a new session.
 
+If dsh-orchestrator loads without an earlier `llm-codex` row, DSH logs
+`patch: entry "llm-codex" not found` and skips the override. It does not insert
+or own a Codex provider. Install the exact dsh-codex package first and restart
+the profile.
+
 ## Configuration
 
 | Component | Setting | Value |
 |---|---|---|
+| Codex parent | provider row | existing `llm-codex` from `@softspark/dsh-codex@1.0.0` |
+| Codex parent | sandbox and approval | `workspace-write`, `untrusted` |
+| Codex parent | API-key auth | `false` |
+| Codex parent | dynamic tools | `true` only in this later bundle layer |
+| Codex parent | request, turn, and tool timeouts | `30000`, `600000`, `600000` ms |
 | Claude provider | registry name | `claude-code` |
 | Claude provider | permission mode | `dontAsk` |
 | Claude provider | explicit environment | `{}` |
@@ -106,11 +127,12 @@ DSH `0.1.1-rc.2` discovers user presets only from configured roots and `$DSH_HOM
 | Copilot tool | background mode | `one-shot` |
 | Copilot tool | depth | `provider-managed` |
 
-The optional `subagent_codex` row remains disabled because Codex is the intended parent provider. DSH scrubs credential-shaped ambient variables before spawning children. Native vendor settings and account state remain authoritative.
+The optional `subagent_codex` row remains disabled because Codex is the intended parent provider. The orchestration override repeats the complete intended static dsh-codex config because DSH replaces a targeted row's `config` rather than deep-merging it. DSH scrubs credential-shaped ambient variables before spawning children. Native vendor settings and account state remain authoritative.
 
 ## Security boundaries
 
 - No provider credential input or custom OAuth.
+- Dynamic-tool execution is enabled only when this bundle follows the exact dsh-codex layer.
 - No npm lifecycle scripts.
 - Claude denies operations that native policy has not already authorized.
 - Copilot receives no tools, rejects permission requests, disables remote export/control, built-in MCP servers, custom instructions, and auto-update.
@@ -130,6 +152,7 @@ Report vulnerabilities privately through [SECURITY.md](SECURITY.md).
 | [Setup](kb/howto/setup.md) | Native login and isolated installation |
 | [Common issues](kb/troubleshooting/common-issues.md) | Login, Google compatibility, and tool discovery failures |
 | [Copilot Gemini ADR](kb/decisions/adr-002-github-copilot-gemini-acp.md) | Terms-safe protocol, model, permissions, and upstream artifact risk |
+| [Codex dynamic-tools ADR](kb/decisions/adr-003-enable-codex-dynamic-tools.md) | Bundle ownership, ordering, and bridge activation decision |
 | [Release SOP](kb/procedures/sop-release.md) | Versioned publication workflow |
 
 ## License

@@ -25,6 +25,7 @@ const requiredFiles = [
   'cordis.patch.yml',
   'agent-presets/softspark-orchestrator/agent.cordis.yml',
   'agent-presets/softspark-orchestrator/preset.yml',
+  'kb/decisions/adr-003-enable-codex-dynamic-tools.md',
   '.npmrc',
   '.npmignore',
   '.github/CODEOWNERS',

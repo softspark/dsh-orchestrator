@@ -3,7 +3,7 @@ title: "DSH Orchestrator Configuration"
 category: reference
 service: dsh-orchestrator
 tags: [configuration, dsh, claude-code, github-copilot, gemini, acp]
-last_updated: "2026-08-27"
+last_updated: "2026-08-31"
 created: "2026-08-26"
 description: "Exact provider and tool configuration contract for the orchestration bundle."
 ---
@@ -17,6 +17,29 @@ description: "Exact provider and tool configuration contract for the orchestrati
 | `@deepseek-ai/dsh` peer | `0.1.1-rc.2` |
 | `@deepseek-ai/dsh-subagent-acp` | `0.1.1-rc.2` |
 | `@deepseek-ai/dsh-subagent-claude-code` | `0.1.1-rc.2` |
+| Companion `@softspark/dsh-codex` bundle | `1.0.0`, loaded earlier |
+
+## Codex parent override
+
+The orchestrator bundle targets the existing `llm-codex` row from the earlier
+dsh-codex layer. DSH replaces the row's complete `config`, so the bundle repeats
+every intended static value:
+
+| Field | Value |
+|---|---|
+| `provider` | `codex` |
+| `command` | `codex` |
+| `sandbox` | `workspace-write` |
+| `approvalPolicy` | `untrusted` |
+| `allowApiKeyAuth` | `false` |
+| `experimentalDynamicTools` | `true` |
+| `dynamicToolTimeoutMs` | `600000` |
+| `requestTimeoutMs` | `30000` |
+| `turnTimeoutMs` | `600000` |
+
+`cwd` is intentionally omitted so dsh-codex resolves it from the DSH process
+working directory. Loading this bundle without an existing `llm-codex` row
+produces a DSH warning and skips the override. It does not insert a provider.
 
 ## Providers
 

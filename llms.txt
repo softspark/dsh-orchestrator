@@ -9,6 +9,7 @@
 - agent-presets/softspark-orchestrator/agent.cordis.yml: standard-derived tool composition.
 - kb/decisions/adr-001-subscription-subagents.md: architecture decision.
 - kb/decisions/adr-002-github-copilot-gemini-acp.md: official ACP route and security decision.
+- kb/decisions/adr-003-enable-codex-dynamic-tools.md: bundle-owned Codex bridge activation decision.
 - kb/reference/configuration.md: exact configuration contract.
 - kb/reference/security.md: trust boundaries and failure policy.
 - kb/howto/setup.md: installation guide.
@@ -22,11 +23,14 @@
 - Copilot Gemini uses `permission: reject`, no child tools, no remote features, and a pinned model.
 - Direct Google, Gemini CLI, Antigravity, Google OAuth, and Gemini API routes are absent.
 - DSH compatibility pinned to 0.1.1-rc.2.
+- Load @softspark/dsh-codex@1.0.0 before @softspark/dsh-orchestrator@1.0.1.
+- dsh-codex keeps dynamic tools disabled unless this later orchestration layer enables them.
 
 ## Verified evidence
 
-- 12/12 tests; 100 percent line and 92.59 percent branch coverage.
+- 14/14 tests; 100 percent line and 93.75 percent branch coverage.
 - Zero source, dependency, SARIF, permission, or lifecycle findings.
 - 459 verified registry signatures and 58 attestations.
-- Codex-to-Claude Max and Codex-to-Copilot-Gemini delegations complete end to end without provider API keys.
+- Network-free DSH 0.1.1-rc.2 composition verifies the complete Codex dynamic-tool override and missing-target warning.
+- Codex-to-Claude Max and Codex-to-Copilot-Gemini live markers remain mandatory before publication.
 - Current package hash is recorded in `kb/planning/dsh-orchestrator-implementation-plan.md`.

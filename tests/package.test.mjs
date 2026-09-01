@@ -10,7 +10,14 @@ const lifecycle = new Set(['preinstall', 'install', 'postinstall', 'prepare', 'p
 test('runtime and peer dependencies are exact', () => {
   assert.equal(manifest.dependencies['@deepseek-ai/dsh-subagent-acp'], '0.1.1-rc.2');
   assert.equal(manifest.dependencies['@deepseek-ai/dsh-subagent-claude-code'], '0.1.1-rc.2');
+  assert.equal(manifest.devDependencies['@deepseek-ai/dsh-app-boot'], '0.1.1-rc.2');
   assert.equal(manifest.peerDependencies['@deepseek-ai/dsh'], '0.1.1-rc.2');
+});
+
+test('composition test dependency is direct and lock-synchronized', () => {
+  assert.equal(lock.packages[''].devDependencies['@deepseek-ai/dsh-app-boot'], '0.1.1-rc.2');
+  assert.equal(lock.packages['node_modules/@deepseek-ai/dsh-app-boot'].version, '0.1.1-rc.2');
+  assert.equal(lock.packages['node_modules/@deepseek-ai/dsh-app-boot'].peer, undefined);
 });
 
 test('package and lock versions agree', () => {

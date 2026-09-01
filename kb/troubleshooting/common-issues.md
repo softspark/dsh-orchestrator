@@ -4,11 +4,39 @@ category: troubleshooting
 service: dsh-orchestrator
 tags: [troubleshooting, dsh, claude-code, google, github-copilot, gemini]
 created: "2026-08-26"
-last_updated: "2026-08-27"
+last_updated: "2026-08-31"
 description: "Diagnoses Claude and Copilot login, model, permission, provider, and preset failures."
 ---
 
 # dsh-orchestrator Common Issues
+
+## Codex lists a delegation tool but does not call it
+
+**Symptoms:** The request context or preset contains `subagent_claude_code` or
+`subagent_gemini_copilot`, but Codex reports that the tool is unavailable or not
+callable.
+
+**Root cause:** The dsh-orchestrator bundle loaded without an earlier
+`llm-codex` row, its patch was ordered before dsh-codex, or a stale `1.0.0`
+orchestrator bundle left dsh-codex in stable mode with
+`experimentalDynamicTools: false`.
+
+**Resolution:** Install the exact packages in order and restart DSH:
+
+```bash
+dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.1 --save-exact
+dsh --profile web --dump-default-config
+```
+
+Confirm the composed `llm-codex` config contains
+`experimentalDynamicTools: true`. A standalone orchestrator layer cannot create
+the missing Codex provider. DSH `0.1.1-rc.2` logs a missing-target warning and
+skips that override.
+
+**Prevention:** Keep the two exact SoftSpark packages in that bundle order and
+run the network-free composition test plus real-client marker smoke for every
+release.
 
 ## The Gemini delegation tool is absent
 

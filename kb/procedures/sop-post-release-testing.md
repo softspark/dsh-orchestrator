@@ -3,7 +3,7 @@ title: "SOP: Post-Release Testing"
 category: procedures
 service: dsh-orchestrator
 tags: [sop, post-release, smoke-test, github-copilot, gemini]
-last_updated: "2026-08-27"
+last_updated: "2026-08-31"
 created: "2026-08-26"
 description: "Verify the published bundle in an isolated DSH profile without changing production state."
 ---
@@ -23,19 +23,21 @@ Confirm that the published artifact registers Claude and Copilot ACP providers a
 
 ## Procedure
 
-1. Install the exact published version into the disposable profile.
-2. Copy `softspark-orchestrator` into the disposable preset root.
-3. Start DSH with telemetry disabled.
-4. Confirm both provider rows load without starting a child.
-5. Create a new session using the preset.
-6. Delegate an exact marker prompt to Claude.
-7. Delegate an exact marker prompt through `subagent_gemini_copilot` and confirm the child has no tools.
-8. Cancel one disposable delegation and confirm the child exits.
-9. Stop DSH and inspect the disposable profile for unexpected credentials or logs.
+1. Install `@softspark/dsh-codex@1.0.0` into the disposable profile.
+2. Install the exact published dsh-orchestrator version after dsh-codex.
+3. Copy `softspark-orchestrator` into the disposable preset root.
+4. Dump the default profile config and confirm `llm-codex` has `experimentalDynamicTools: true` plus the complete reviewed config.
+5. Start DSH with telemetry disabled.
+6. Confirm both external provider rows load without starting a child.
+7. Create a new session using the preset.
+8. Delegate an exact marker prompt to Claude.
+9. Delegate an exact marker prompt through `subagent_gemini_copilot` and confirm the child has no tools.
+10. Cancel one disposable delegation and confirm the child exits.
+11. Stop DSH and inspect the disposable profile for unexpected credentials or logs.
 
 ## Verification
 
-Both markers return through their named tools, no provider API key is present, Copilot reports the pinned Gemini model, and the process tree is quiescent after shutdown.
+The config dump proves the bridge is enabled by the orchestrator layer, both markers return through their named tools, no provider API key is present, Copilot reports the pinned Gemini model, and the process tree is quiescent after shutdown.
 
 ## Rollback
 

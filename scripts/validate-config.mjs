@@ -4,10 +4,21 @@ import { readFileSync } from 'node:fs';
 const patch = readFileSync(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
 const preset = readFileSync(new URL('../agent-presets/softspark-orchestrator/agent.cordis.yml', import.meta.url), 'utf8');
 
-if (/(ANTHROPIC_API_KEY|GEMINI_API_KEY|GOOGLE_API_KEY|GOOGLE_APPLICATION_CREDENTIALS|apiKey|oauth)/i.test(patch)) {
+if (/(ANTHROPIC_API_KEY|GEMINI_API_KEY|GOOGLE_API_KEY|GOOGLE_APPLICATION_CREDENTIALS|(?:^|\s)apiKey\s*:|oauth)/im.test(patch)) {
   throw new Error('provider patch must not reference keys, credentials, or OAuth');
 }
 for (const expected of [
+  '- id: llm-codex',
+  "name: '@softspark/dsh-codex'",
+  'provider: codex',
+  'command: codex',
+  'sandbox: workspace-write',
+  'approvalPolicy: untrusted',
+  'allowApiKeyAuth: false',
+  'experimentalDynamicTools: true',
+  'dynamicToolTimeoutMs: 600000',
+  'requestTimeoutMs: 30000',
+  'turnTimeoutMs: 600000',
   'providerName: claude-code',
   'permissionMode: dontAsk',
   "name: '@deepseek-ai/dsh-subagent-acp'",
@@ -27,6 +38,12 @@ for (const expected of [
   'permission: reject',
 ]) {
   if (!patch.includes(expected)) throw new Error(`provider patch missing: ${expected}`);
+}
+if ((patch.match(/^- id: llm-codex$/gmu) ?? []).length !== 1) {
+  throw new Error('provider patch must target llm-codex exactly once');
+}
+if (/allowApiKeyAuth:\s*true|experimentalDynamicTools:\s*false/iu.test(patch)) {
+  throw new Error('Codex dynamic bridge must reject API-key auth and remain enabled');
 }
 if ((patch.match(/env: \{\}/g) ?? []).length !== 2) throw new Error('external providers must use empty explicit env overlays');
 if (/gemini-cli|antigravity|google oauth|GOOGLE_/i.test(patch)) throw new Error('direct Google authentication routes must not be registered');

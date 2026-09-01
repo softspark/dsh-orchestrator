@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Version `1.0.0` receives security fixes on `main`.
+Version `1.0.1` receives security fixes on `main`.
 
 ## Reporting a vulnerability
 
@@ -21,6 +21,11 @@ Claude Code and GitHub Copilot CLI own login, refresh, credential storage, and a
 Both provider rows use `env: {}`. Credential-shaped ambient environment variables are scrubbed by the DSH subprocess boundary before explicit configuration is applied. Copilot authenticates from its native system credential-store entry.
 
 ### Permissions
+
+The orchestrator layer enables dsh-codex's bounded experimental dynamic-tool
+bridge so the Codex parent can call the two static delegation tools. It keeps
+`allowApiKeyAuth: false`, `sandbox: workspace-write`, and
+`approvalPolicy: untrusted`. Installing dsh-codex alone leaves that bridge off.
 
 Claude runs with `permissionMode: dontAsk`. Requests that still need human approval fail closed. Changing Claude to `bypassPermissions` requires explicit user approval and a separate security review.
 

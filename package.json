@@ -1,6 +1,6 @@
 {
   "name": "@softspark/dsh-orchestrator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Opt-in DSH orchestration bundle for subscription-backed Claude Code and GitHub Copilot delegation.",
   "keywords": ["deepseek-harness", "dsh-plugin", "dsh", "claude-code", "github-copilot", "gemini", "acp", "llm", "agent"],
   "homepage": "https://github.com/softspark/dsh-orchestrator#readme",
@@ -39,5 +39,6 @@
     "@deepseek-ai/dsh-subagent-acp": "0.1.1-rc.2",
     "@deepseek-ai/dsh-subagent-claude-code": "0.1.1-rc.2"
   },
+  "devDependencies": { "@deepseek-ai/dsh-app-boot": "0.1.1-rc.2" },
   "peerDependencies": { "@deepseek-ai/dsh": "0.1.1-rc.2" }
 }

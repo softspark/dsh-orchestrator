@@ -2,9 +2,20 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
+import { fileURLToPath } from 'node:url';
+
+import { composeEntries, loadOverlayPatches } from '@deepseek-ai/dsh-app-boot';
 
 const patch = await readFile(new URL('../cordis.patch.yml', import.meta.url), 'utf8');
 const crlfPatch = patch.replaceAll(/\r?\n/gu, '\r\n');
+const dshManifest = JSON.parse(await readFile(
+  new URL('../node_modules/@deepseek-ai/dsh/package.json', import.meta.url),
+  'utf8',
+));
+const parsedPatch = loadOverlayPatches(
+  'dsh-orchestrator-test',
+  fileURLToPath(new URL('../cordis.patch.yml', import.meta.url)),
+);
 
 test('host patch registers Claude and official Copilot ACP providers', () => {
   assert.match(patch, /providerName: claude-code/u);
@@ -36,4 +47,40 @@ test('host patch registers Claude and official Copilot ACP providers', () => {
 
 test('public patch has no private absolute path', () => {
   assert.doesNotMatch(patch, /\/Users\/|[A-Za-z]:\\Users\\/u);
+});
+
+test('patch composes the complete Codex dynamic-tool config only after dsh-codex', () => {
+  assert.equal(dshManifest.version, '0.1.1-rc.2');
+
+  const warnings = [];
+  const composed = composeEntries([
+    [{ insert: [{ id: 'llm-codex', name: '@softspark/dsh-codex' }] }],
+    parsedPatch,
+  ], (message) => warnings.push(message));
+  const codex = composed.find((entry) => entry.id === 'llm-codex');
+
+  assert.deepEqual(warnings, []);
+  assert.deepEqual(codex, {
+    id: 'llm-codex',
+    name: '@softspark/dsh-codex',
+    config: {
+      provider: 'codex',
+      command: 'codex',
+      sandbox: 'workspace-write',
+      approvalPolicy: 'untrusted',
+      allowApiKeyAuth: false,
+      experimentalDynamicTools: true,
+      dynamicToolTimeoutMs: 600000,
+      requestTimeoutMs: 30000,
+      turnTimeoutMs: 600000,
+    },
+  });
+
+  const standaloneWarnings = [];
+  const standalone = composeEntries([parsedPatch], (message) => {
+    standaloneWarnings.push(message);
+  });
+
+  assert.equal(standalone.some((entry) => entry.id === 'llm-codex'), false);
+  assert.deepEqual(standaloneWarnings, ['patch: entry "llm-codex" not found']);
 });

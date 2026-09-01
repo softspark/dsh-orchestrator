@@ -2,6 +2,18 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [1.0.1] - 2026-08-31
+
+### Fixed
+
+- Enable dsh-codex's bounded dynamic-tool bridge from the later orchestrator bundle layer so Codex can call the preset's Claude and Copilot Gemini delegation tools.
+- Repeat the complete reviewed Codex provider config while retaining API-key rejection, workspace sandboxing, untrusted approvals, and bounded timeouts.
+
+### Added
+
+- Network-free composition coverage against DSH `0.1.1-rc.2`, including the warning-and-skip behavior when `llm-codex` is absent.
+- ADR-003, setup guidance, troubleshooting, and release verification for the required dsh-codex then dsh-orchestrator bundle order.
+
 ## [1.0.0] - 2026-08-27
 
 ### Added
