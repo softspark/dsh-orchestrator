@@ -4,7 +4,7 @@ category: planning
 service: dsh-orchestrator
 tags: [planning, dsh, public-module, release, github-copilot, gemini]
 created: "2026-08-26"
-last_updated: "2026-08-31"
+last_updated: "2026-09-01"
 description: "Tracks the public SoftSpark module foundation and release readiness gates."
 ---
 
@@ -36,6 +36,7 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 | 6 | GitHub Copilot ACP provider, Gemini smoke, ADR, and security evidence | complete |
 | 7 | Tag, provenance publish, and post-release verification | complete |
 | 8 | Prepare 1.0.1 Codex dynamic-tool composition correction | complete |
+| 9 | Run fresh 1.0.1 Claude and Copilot Gemini pre-tag marker smokes | complete |
 
 ## Release blockers
 
@@ -55,4 +56,5 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 - Direct Google integration remains excluded; the supported Gemini route is GitHub Copilot's official ACP server.
 - Version `1.0.1` targets the existing `llm-codex` row from a later bundle layer and enables the bounded dynamic-tool bridge without changing dsh-codex's standalone default.
 - A network-free test composes the real patch through DSH `0.1.1-rc.2`, verifies the complete Codex config, and records warning-and-skip behavior when the earlier row is absent.
-- Fresh Codex-to-Claude and Codex-to-Copilot-Gemini markers remain release blockers before publishing `1.0.1`.
+- The fresh 1.0.1 pre-tag profile produced `CLAUDE_CODE_CHILD_OK` through `subagent_claude_code`, then `CODEX_CLAUDE_ORCHESTRATION_OK` from the Codex parent.
+- The fresh 1.0.1 pre-tag profile produced `GEMINI_COPILOT_CHILD_OK` through `subagent_gemini_copilot`, then `CODEX_GEMINI_ORCHESTRATION_OK` from the Codex parent.

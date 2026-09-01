@@ -12,7 +12,7 @@ The package does not implement OAuth, read credential files, accept provider API
 
 Version `1.0.1` is the current patch release and targets DSH `0.1.1-rc.2`.
 
-Verified locally: 14/14 tests, 100 percent line coverage, 93.75 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override. The release SOP still requires isolated Codex-to-Claude and Codex-to-Copilot-Gemini marker smokes before publication.
+Verified locally: 14/14 tests, 100 percent line coverage, 93.75 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override. Fresh isolated pre-tag smokes completed both `subagent_claude_code` and `subagent_gemini_copilot` marker roundtrips through native subscription logins on 2026-09-01.
 
 ## Requirements
 

@@ -2,7 +2,7 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
-## [1.0.1] - 2026-08-31
+## [1.0.1] - 2026-09-01
 
 ### Fixed
 
