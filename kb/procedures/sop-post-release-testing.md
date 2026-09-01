@@ -39,6 +39,10 @@ Confirm that the published artifact registers Claude and Copilot ACP providers a
 
 The config dump proves the bridge is enabled by the orchestrator layer, both markers return through their named tools, no provider API key is present, Copilot reports the pinned Gemini model, and the process tree is quiescent after shutdown.
 
+## Last verified release
+
+Version `1.0.1` passed this procedure on 2026-09-01. The exact npm registry package ran on DSH `0.1.1-rc.2` after `@softspark/dsh-codex@1.0.0`; Claude Code returned `POST_RELEASE_CLAUDE_CHILD_OK`, GitHub Copilot Gemini returned `POST_RELEASE_GEMINI_CHILD_OK`, both Codex parent turns completed with their expected markers, and DSH stopped cleanly.
+
 ## Rollback
 
 Stop the disposable profile. Preserve sanitized failure evidence, then remove the temporary workspace using the approved cleanup process. Do not modify native vendor login state.

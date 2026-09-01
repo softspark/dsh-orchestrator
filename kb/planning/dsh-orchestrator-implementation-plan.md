@@ -37,6 +37,7 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 | 7 | Tag, provenance publish, and post-release verification | complete |
 | 8 | Prepare 1.0.1 Codex dynamic-tool composition correction | complete |
 | 9 | Run fresh 1.0.1 Claude and Copilot Gemini pre-tag marker smokes | complete |
+| 10 | Tag, provenance publish, and exact-registry 1.0.1 post-release verification | complete |
 
 ## Release blockers
 
@@ -58,3 +59,5 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 - A network-free test composes the real patch through DSH `0.1.1-rc.2`, verifies the complete Codex config, and records warning-and-skip behavior when the earlier row is absent.
 - The fresh 1.0.1 pre-tag profile produced `CLAUDE_CODE_CHILD_OK` through `subagent_claude_code`, then `CODEX_CLAUDE_ORCHESTRATION_OK` from the Codex parent.
 - The fresh 1.0.1 pre-tag profile produced `GEMINI_COPILOT_CHILD_OK` through `subagent_gemini_copilot`, then `CODEX_GEMINI_ORCHESTRATION_OK` from the Codex parent.
+- Published package: `@softspark/dsh-orchestrator@1.0.1`, eight files, shasum `7573aeedc5a5204732bd9cfb7d80aeb3e9ca0be0`, SLSA provenance v1.
+- The exact registry package produced `POST_RELEASE_CLAUDE_CHILD_OK` and `POST_RELEASE_CODEX_CLAUDE_OK` through the Claude tool, plus `POST_RELEASE_GEMINI_CHILD_OK` and `POST_RELEASE_CODEX_GEMINI_OK` through the Copilot Gemini tool.
