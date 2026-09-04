@@ -3,7 +3,7 @@ title: "SOP: Post-Release Testing"
 category: procedures
 service: dsh-orchestrator
 tags: [sop, post-release, smoke-test, github-copilot, gemini]
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 created: "2026-08-26"
 description: "Verify the published bundle in an isolated DSH profile without changing production state."
 ---
@@ -23,7 +23,7 @@ Confirm that the published artifact registers Claude and Copilot ACP providers a
 
 ## Procedure
 
-1. Install `@softspark/dsh-codex@1.0.0` into the disposable profile.
+1. Install `@softspark/dsh-codex@1.4.0` into the disposable profile. Session permission inheritance needs 1.4.0 or newer; an older dsh-codex keeps the unknown key and silently ignores it.
 2. Install the exact published dsh-orchestrator version after dsh-codex.
 3. Copy `softspark-orchestrator` into the disposable preset root.
 4. Dump the default profile config and confirm `llm-codex` has `experimentalDynamicTools: true` plus the complete reviewed config.

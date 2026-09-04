@@ -4,7 +4,7 @@ category: troubleshooting
 service: dsh-orchestrator
 tags: [troubleshooting, dsh, claude-code, google, github-copilot, gemini]
 created: "2026-08-26"
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 description: "Diagnoses Claude and Copilot login, model, permission, provider, and preset failures."
 ---
 
@@ -24,8 +24,8 @@ orchestrator bundle left dsh-codex in stable mode with
 **Resolution:** Install the exact packages in order and restart DSH:
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
-dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.1 --save-exact
+dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.1.0 --save-exact
 dsh --profile web --dump-default-config
 ```
 

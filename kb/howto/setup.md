@@ -3,7 +3,7 @@ title: "How to Set Up DSH Orchestrator"
 category: howto
 service: dsh-orchestrator
 tags: [setup, dsh, native-login, github-copilot, gemini]
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 created: "2026-08-26"
 description: "Install the local bundle and preset after completing native vendor logins."
 ---
@@ -14,7 +14,7 @@ description: "Install the local bundle and preset after completing native vendor
 
 - Node.js `22.19.0` or newer within major 22.
 - DSH `0.1.1-rc.2`.
-- `@softspark/dsh-codex@1.0.0` available from npm.
+- `@softspark/dsh-codex@1.4.0` available from npm.
 - Claude Code signed in through `claude auth login`.
 - GitHub Copilot CLI `1.0.80` installed from an official channel and signed in through `copilot login`.
 - An active GitHub Copilot plan with CLI access and `gemini-3.6-flash` enabled.
@@ -38,7 +38,7 @@ npm run package:check
 ### 2. Install the Codex parent bundle first
 
 ```sh
-dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
 ```
 
 The bundle order is part of the contract. dsh-orchestrator targets the
@@ -53,7 +53,7 @@ dsh plugin --profile web add "file:$(pwd)"
 For the published patch release, use:
 
 ```sh
-dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.1 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.1.0 --save-exact
 ```
 
 ### 4. Copy the preset without overwriting
@@ -85,4 +85,4 @@ outside DSH.
 | Gemini model is unavailable | Check Copilot plan and organization policy; do not add a Google API key as a fallback. |
 | Permission request fails | Expected under fail-closed defaults; adjust native settings, not provider keys. |
 | Tool is absent | Select the `softspark-orchestrator` preset in a new session. |
-| DSH warns that `llm-codex` was not found | Install `@softspark/dsh-codex@1.0.0` first, reinstall this bundle so it follows that layer, and restart DSH. |
+| DSH warns that `llm-codex` was not found | Install `@softspark/dsh-codex@1.4.0` first, reinstall this bundle so it follows that layer, and restart DSH. |

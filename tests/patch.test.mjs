@@ -20,6 +20,7 @@ const parsedPatch = loadOverlayPatches(
 test('host patch registers Claude and official Copilot ACP providers', () => {
   assert.match(patch, /providerName: claude-code/u);
   assert.match(patch, /permissionMode: dontAsk/u);
+  assert.equal((patch.match(/inheritSessionPermissions: true/gu) ?? []).length, 1);
   assert.match(patch, /providerName: copilot-gemini/u);
   assert.match(patch, /name: '@deepseek-ai\/dsh-subagent-acp'/u);
   assert.match(patch, /command: copilot/u);
@@ -49,6 +50,22 @@ test('public patch has no private absolute path', () => {
   assert.doesNotMatch(patch, /\/Users\/|[A-Za-z]:\\Users\\/u);
 });
 
+test('the Claude provider carries no session permission inheritance', () => {
+  // `@deepseek-ai/dsh-subagent-claude-code@0.1.1-rc.2` declares only
+  // providerName, env, permissionMode and disposeGraceMs, and resolves those
+  // four alone; `permissionMode` is fixed for the provider instance. An
+  // undeclared key is kept by schemastery rather than rejected, so the key
+  // would survive composition, change nothing, and warn about nothing.
+  const composed = composeEntries([parsedPatch], () => {});
+  const claude = composed.find((entry) => entry.id === 'subagent-claude-code');
+
+  assert.deepEqual(claude.config, {
+    providerName: 'claude-code',
+    permissionMode: 'dontAsk',
+    env: {},
+  });
+});
+
 test('patch composes the complete Codex dynamic-tool config only after dsh-codex', () => {
   assert.equal(dshManifest.version, '0.1.1-rc.2');
 
@@ -68,6 +85,7 @@ test('patch composes the complete Codex dynamic-tool config only after dsh-codex
       command: 'codex',
       sandbox: 'workspace-write',
       approvalPolicy: 'untrusted',
+      inheritSessionPermissions: true,
       allowApiKeyAuth: false,
       experimentalDynamicTools: true,
       dynamicToolTimeoutMs: 600000,

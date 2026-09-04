@@ -2,6 +2,14 @@
 # DSH replaces a targeted row's complete config rather than deep-merging it, so
 # keep the full intended static Codex config here. cwd remains provider-defaulted
 # to the DSH process working directory.
+#
+# inheritSessionPermissions belongs to this row alone. It needs
+# @softspark/dsh-codex 1.4.0 or newer, where the sandbox and the approval policy
+# are inherited from the DSH session independently of each other. The Claude row
+# below carries no such key: dsh-subagent-claude-code declares only
+# providerName, env, permissionMode and disposeGraceMs, and schemastery keeps an
+# undeclared key instead of rejecting it, so the same line there would be a
+# silent no-op that reads like an escalation.
 - id: llm-codex
   name: '@softspark/dsh-codex'
   config:
@@ -9,6 +17,7 @@
     command: codex
     sandbox: workspace-write
     approvalPolicy: untrusted
+    inheritSessionPermissions: true
     allowApiKeyAuth: false
     experimentalDynamicTools: true
     dynamicToolTimeoutMs: 600000
