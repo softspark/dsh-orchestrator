@@ -10,9 +10,9 @@ The package does not implement OAuth, read credential files, accept provider API
 
 ## Status
 
-Version `1.0.1` is the current patch release and targets DSH `0.1.1-rc.2`.
+Version `1.1.0` is the current release and targets DSH `0.1.1-rc.2`.
 
-Verified locally: 14/14 tests, 100 percent line coverage, 93.75 percent branch coverage, zero source or dependency findings, 459 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override. Version `1.0.1` is published with SLSA provenance; fresh isolated pre-tag and exact-registry post-release smokes completed both `subagent_claude_code` and `subagent_gemini_copilot` marker roundtrips through native subscription logins on 2026-09-01.
+Verified locally: 15/15 tests, zero source, permission, and dependency findings, 460 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override, including that only the Codex row carries session permission inheritance. A fresh isolated pre-tag profile completed both `subagent_claude_code` and `subagent_gemini_copilot` marker roundtrips through native subscription logins on 2026-09-04; in that profile a Codex thread serving a `workspace-write` session was refused a write outside the workspace and the same request succeeded under a `danger-full-access` session, which is inheritance working end to end.
 
 ## Requirements
 

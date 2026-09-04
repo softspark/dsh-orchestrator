@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 const manifest = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 for (const [field, expected] of Object.entries({
   name: '@softspark/dsh-orchestrator',
-  version: '1.0.1',
+  version: '1.1.0',
   license: 'Apache-2.0',
   type: 'module',
 })) {

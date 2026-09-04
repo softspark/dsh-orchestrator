@@ -4,7 +4,7 @@ category: planning
 service: dsh-orchestrator
 tags: [planning, dsh, public-module, release, github-copilot, gemini]
 created: "2026-08-26"
-last_updated: "2026-09-01"
+last_updated: "2026-09-04"
 description: "Tracks the public SoftSpark module foundation and release readiness gates."
 ---
 
@@ -38,6 +38,9 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 | 8 | Prepare 1.0.1 Codex dynamic-tool composition correction | complete |
 | 9 | Run fresh 1.0.1 Claude and Copilot Gemini pre-tag marker smokes | complete |
 | 10 | Tag, provenance publish, and exact-registry 1.0.1 post-release verification | complete |
+| 11 | Correct 1.1.0 session permission inheritance and its documentation | complete |
+| 12 | Run fresh 1.1.0 pre-tag marker and permission-inheritance smokes | complete |
+| 13 | Tag, provenance publish, and exact-registry 1.1.0 post-release verification | pending |
 
 ## Release blockers
 
@@ -61,3 +64,9 @@ Ship a public, config-only DSH bundle that exposes Claude Code and GitHub Copilo
 - The fresh 1.0.1 pre-tag profile produced `GEMINI_COPILOT_CHILD_OK` through `subagent_gemini_copilot`, then `CODEX_GEMINI_ORCHESTRATION_OK` from the Codex parent.
 - Published package: `@softspark/dsh-orchestrator@1.0.1`, eight files, shasum `7573aeedc5a5204732bd9cfb7d80aeb3e9ca0be0`, SLSA provenance v1.
 - The exact registry package produced `POST_RELEASE_CLAUDE_CHILD_OK` and `POST_RELEASE_CODEX_CLAUDE_OK` through the Claude tool, plus `POST_RELEASE_GEMINI_CHILD_OK` and `POST_RELEASE_CODEX_GEMINI_OK` through the Copilot Gemini tool.
+- Version `1.1.0` keeps session permission inheritance on the Codex row only. `@deepseek-ai/dsh-subagent-claude-code@0.1.1-rc.2` resolves `providerName`, `env`, `permissionMode`, and `disposeGraceMs` and nothing else, and schemastery keeps an undeclared key rather than rejecting it, so the same key on the Claude row was a silent no-op documented as an escalation.
+- The DSH composer confirms it: the composed tree contains exactly one `inheritSessionPermissions`, on `llm-codex`, and the `subagent-claude-code` row composes to `providerName`, `permissionMode`, and `env`.
+- The 1.1.0 pre-tag profile returned `PARENT_PRETAG_CLAUDE_CHILD_OK` and `PARENT_PRETAG_GEMINI_CHILD_OK` from the Codex parent, and `PRETAG_CODEX_PARENT_OK` for a parent-only turn.
+- Inheritance is proven end to end in that profile: the same write outside the workspace failed under a `workspace-write` session and succeeded under a `danger-full-access` one, with only the session permission state differing.
+- Documented installs require `@softspark/dsh-codex@1.4.0` or newer. Earlier versions accept `inheritSessionPermissions` and ignore it.
+- `npm run test:coverage` reports an empty file table on Node 24: the package ships configuration, so no first-party source is instrumented. The coverage figures recorded for 1.0.0 and 1.0.1 above are not reproducible on this toolchain and are kept only as a historical record.
