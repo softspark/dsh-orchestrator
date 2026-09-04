@@ -4,7 +4,7 @@ category: decisions
 service: dsh-orchestrator
 tags: [dsh, codex, dynamic-tools, composition, orchestration]
 created: "2026-08-31"
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 description: "Enable the opt-in dsh-codex dynamic-tool bridge from the later dsh-orchestrator bundle layer."
 ---
 
@@ -98,6 +98,7 @@ complete intended static configuration:
     command: codex
     sandbox: workspace-write
     approvalPolicy: untrusted
+    inheritSessionPermissions: true
     allowApiKeyAuth: false
     experimentalDynamicTools: true
     dynamicToolTimeoutMs: 600000
@@ -118,8 +119,21 @@ target row is missing.
 - dsh-codex remains safe and unbridged when installed without this bundle.
 - ai-toolkit keeps ownership limited to packages, preset files, and lifecycle
   state.
-- Timeouts, sandbox mode, approval policy, and API-key rejection are explicit in
-  one composition contract.
+- Timeouts, sandbox and approval fallbacks, explicit session inheritance, and
+  API-key rejection are explicit in one composition contract.
+- A session keeps its own permission level instead of silently running its Codex
+  thread wider or narrower than the session the user selected.
+
+- The sandbox and the approval policy are inherited independently, so a preset
+  pairing a full-access sandbox with an interactive approval policy yields
+  `danger-full-access` with the `untrusted` approval fallback. The presets a
+  profile offers become part of the security boundary.
+- Inheritance needs `@softspark/dsh-codex` 1.4.0 or newer. An older package
+  keeps the unknown key and ignores it, with no warning, because schemastery
+  does not reject undeclared keys.
+- The same key on the Claude row would be inert for the same reason:
+  `dsh-subagent-claude-code` resolves four declared fields and none of them is
+  this one. It is therefore not set there.
 
 ### Negative
 

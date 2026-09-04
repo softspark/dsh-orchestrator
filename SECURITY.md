@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Version `1.0.1` receives security fixes on `main`.
+Version `1.1.0` receives security fixes on `main`.
 
 ## Reporting a vulnerability
 
@@ -25,9 +25,29 @@ Both provider rows use `env: {}`. Credential-shaped ambient environment variable
 The orchestrator layer enables dsh-codex's bounded experimental dynamic-tool
 bridge so the Codex parent can call the two static delegation tools. It keeps
 `allowApiKeyAuth: false`, `sandbox: workspace-write`, and
-`approvalPolicy: untrusted`. Installing dsh-codex alone leaves that bridge off.
+`approvalPolicy: untrusted` as static fallbacks. Installing dsh-codex alone
+leaves the bridge and the inheritance below off.
 
-Claude runs with `permissionMode: dontAsk`. Requests that still need human approval fail closed. Changing Claude to `bypassPermissions` requires explicit user approval and a separate security review.
+`inheritSessionPermissions: true`, from `@softspark/dsh-codex@1.4.0` onwards,
+lets the Codex thread follow the DSH session it serves. The sandbox and the
+approval policy are inherited independently, not as a pair. The session's
+latest valid `sandbox/mode` becomes the thread sandbox, including
+`danger-full-access`. Its latest `approval/policy` becomes Codex `never` only
+when the session policy is `never`; every other policy, the interactive `ask`
+included, keeps the configured fallback. A preset that pairs a full-access
+sandbox with an interactive approval policy therefore yields
+`danger-full-access` with the `untrusted` fallback. Missing, malformed, and
+unreadable session state keeps both fallbacks.
+
+Widening a preset widens the Codex child that session starts, so the presets a
+profile offers are part of this boundary. Permissions resolve once, when the
+thread is created, matching DSH's own pinning of these facts at session
+creation; a later preset change never reaches a live session.
+
+Claude runs with `permissionMode: dontAsk`, fixed for the provider instance and
+not inherited from any session. Requests that still need human approval fail
+closed. Changing Claude to `bypassPermissions` requires explicit user approval
+and a separate security review.
 
 Copilot ACP runs with `permission: reject` and an empty tool catalog. The launch arguments also disable custom instructions, remote control/export, built-in MCP servers, `ask_user`, and auto-update. Removing any of those restrictions requires explicit approval and a separate security review.
 

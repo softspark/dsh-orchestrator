@@ -14,6 +14,7 @@ for (const expected of [
   'command: codex',
   'sandbox: workspace-write',
   'approvalPolicy: untrusted',
+  'inheritSessionPermissions: true',
   'allowApiKeyAuth: false',
   'experimentalDynamicTools: true',
   'dynamicToolTimeoutMs: 600000',
@@ -41,6 +42,12 @@ for (const expected of [
 }
 if ((patch.match(/^- id: llm-codex$/gmu) ?? []).length !== 1) {
   throw new Error('provider patch must target llm-codex exactly once');
+}
+// Exactly one, on the Codex row. Nothing reads this key on the Claude row, and
+// schemastery keeps an undeclared key rather than rejecting it, so a second
+// occurrence would be a silent no-op documented as an escalation.
+if ((patch.match(/inheritSessionPermissions: true/gu) ?? []).length !== 1) {
+  throw new Error('only the Codex provider inherits explicit session permissions');
 }
 if (/allowApiKeyAuth:\s*true|experimentalDynamicTools:\s*false/iu.test(patch)) {
   throw new Error('Codex dynamic bridge must reject API-key auth and remain enabled');

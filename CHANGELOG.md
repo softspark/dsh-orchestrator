@@ -2,6 +2,17 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [1.1.0] - 2026-09-04
+
+### Added
+
+- Enable `inheritSessionPermissions` on the Codex provider row, so a Codex thread follows the sandbox and approval policy of the DSH session it serves instead of always using the static fallback. The two knobs are inherited independently: any valid session `sandbox/mode` is adopted, while only the DSH `never` approval policy is, and missing, malformed, or unreadable state keeps both fallbacks. Requires `@softspark/dsh-codex` 1.4.0 or newer.
+
+### Changed
+
+- Require `@softspark/dsh-codex` 1.4.0 or newer throughout the documented install. Older versions accept the new key and silently ignore it.
+- Document session permission inheritance as the per-knob behaviour it is, in the README, `SECURITY.md`, ADR-003, and the KB configuration and security references.
+
 ## [1.0.1] - 2026-09-01
 
 ### Fixed

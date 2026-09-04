@@ -20,7 +20,7 @@ Verified locally: 14/14 tests, 100 percent line coverage, 93.75 percent branch c
 - npm for repository verification.
 - `pnpm` for the DSH profile plugin manager.
 - DeepSeek Harness `0.1.1-rc.2`.
-- `@softspark/dsh-codex@1.0.0` installed before this bundle when Codex is the parent.
+- `@softspark/dsh-codex@1.4.0` or newer installed before this bundle when Codex is the parent. Session permission inheritance needs 1.4.0; an older dsh-codex accepts the key and ignores it.
 - Claude Code authenticated through `claude auth login`.
 - GitHub Copilot CLI `1.0.80` or a separately reviewed compatible version, authenticated through `copilot login` with an active Copilot plan.
 
@@ -71,7 +71,7 @@ npm run package:check
 Use an isolated `DSH_HOME` before modifying a regular profile.
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
 dsh plugin --profile web add "file:$(pwd)"
 
 PRESET_ROOT="${DSH_HOME:-$HOME/.dsh}/.agent-presets"
@@ -87,8 +87,8 @@ Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing
 Install the exact reviewed version and copy its preset into the profile's user preset root:
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-codex@1.0.0 --save-exact
-dsh plugin --profile web add @softspark/dsh-orchestrator@1.0.1 --save-exact
+dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
+dsh plugin --profile web add @softspark/dsh-orchestrator@1.1.0 --save-exact
 
 DSH_ROOT="${DSH_HOME:-$HOME/.dsh}"
 PROFILE_ROOT="$DSH_ROOT/profiles/web"
@@ -110,13 +110,14 @@ the profile.
 
 | Component | Setting | Value |
 |---|---|---|
-| Codex parent | provider row | existing `llm-codex` from `@softspark/dsh-codex@1.0.0` |
-| Codex parent | sandbox and approval | `workspace-write`, `untrusted` |
+| Codex parent | provider row | existing `llm-codex` from `@softspark/dsh-codex@1.4.0` |
+| Codex parent | sandbox and approval fallback | `workspace-write`, `untrusted` |
+| Codex parent | session permission inheritance | `true`; each knob follows the session on its own, see below |
 | Codex parent | API-key auth | `false` |
 | Codex parent | dynamic tools | `true` only in this later bundle layer |
 | Codex parent | request, turn, and tool timeouts | `30000`, `600000`, `600000` ms |
 | Claude provider | registry name | `claude-code` |
-| Claude provider | permission mode | `dontAsk` |
+| Claude provider | permission mode | `dontAsk`, fixed for the provider instance |
 | Claude provider | explicit environment | `{}` |
 | Claude tool | background mode | `one-shot` |
 | Claude tool | depth | `provider-managed` |
@@ -127,6 +128,31 @@ the profile.
 | Copilot tool | background mode | `one-shot` |
 | Copilot tool | depth | `provider-managed` |
 
+### Session permission inheritance
+
+`inheritSessionPermissions: true` lets a Codex thread follow the DSH session it
+serves instead of always using the configured fallback. The sandbox and the
+approval policy are inherited **independently**, not as a pair:
+
+| Session state | Resulting Codex thread |
+|---|---|
+| DSH `danger-full-access` preset (`danger-full-access` + `never`) | `danger-full-access`, `never` |
+| DSH `workspace-write` preset (`workspace-write` + `ask`) | `workspace-write`, `untrusted` — the fallback |
+| a full-access sandbox paired with an interactive approval policy | `danger-full-access`, `untrusted` |
+| a read-only sandbox | `read-only`, `untrusted` |
+| no, malformed, or unreadable session state | the configured fallback |
+
+The session's latest valid `sandbox/mode` becomes the thread sandbox. Its
+latest `approval/policy` becomes Codex `never` only when the session policy is
+`never`; every other policy, the interactive `ask` included, keeps the
+configured fallback, because app-server approvals have their own UI path.
+
+A widened preset therefore widens the Codex child that session starts. Review
+the presets a profile offers before enabling this. Permissions resolve once,
+when the thread is created — matching DSH, which pins `sandbox/mode` and
+`approval/policy` into a session at creation so later changes never alter a
+live session.
+
 The optional `subagent_codex` row remains disabled because Codex is the intended parent provider. The orchestration override repeats the complete intended static dsh-codex config because DSH replaces a targeted row's `config` rather than deep-merging it. DSH scrubs credential-shaped ambient variables before spawning children. Native vendor settings and account state remain authoritative.
 
 ## Security boundaries
@@ -134,7 +160,8 @@ The optional `subagent_codex` row remains disabled because Codex is the intended
 - No provider credential input or custom OAuth.
 - Dynamic-tool execution is enabled only when this bundle follows the exact dsh-codex layer.
 - No npm lifecycle scripts.
-- Claude denies operations that native policy has not already authorized.
+- Codex keeps its reviewed `workspace-write` and `untrusted` fallbacks unless the session's own DSH permission state overrides them, one knob at a time.
+- Claude runs with the fixed `dontAsk` permission mode and denies operations that native policy has not already authorized.
 - Copilot receives no tools, rejects permission requests, disables remote export/control, built-in MCP servers, custom instructions, and auto-update.
 - Each delegation receives a standalone task and workspace cwd, not parent conversation history.
 - Child effects completed before cancellation are not rolled back.

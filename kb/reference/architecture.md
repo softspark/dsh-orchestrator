@@ -3,7 +3,7 @@ title: "DSH Orchestrator Architecture"
 category: reference
 service: dsh-orchestrator
 tags: [architecture, dsh, subagents, github-copilot, acp]
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 created: "2026-08-26"
 description: "Architecture of the config-only DSH bundle and its agent preset."
 ---
@@ -31,8 +31,8 @@ description: "Architecture of the config-only DSH bundle and its agent preset."
 
 ## Composition rules
 
-Bundle order is part of the composition contract. `@softspark/dsh-codex@1.0.0`
-must load before `@softspark/dsh-orchestrator@1.0.1`, whose patch replaces the
+Bundle order is part of the composition contract. `@softspark/dsh-codex@1.4.0`
+must load before `@softspark/dsh-orchestrator@1.1.0`, whose patch replaces the
 complete config of the existing `llm-codex` row. A missing target is warning-and-skip
 under DSH `0.1.1-rc.2`, so standalone dsh-orchestrator does not create a Codex
 provider. Provider names are process-global and unique. Tool names are static

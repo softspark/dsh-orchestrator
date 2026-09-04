@@ -3,7 +3,7 @@ title: "DSH Orchestrator Security Boundaries"
 category: reference
 service: dsh-orchestrator
 tags: [security, credentials, permissions, github-copilot, gemini]
-last_updated: "2026-08-31"
+last_updated: "2026-09-04"
 created: "2026-08-26"
 description: "Credential, permission, process, and workspace boundaries for child agents."
 ---
@@ -16,7 +16,8 @@ The repository contains no provider key, token, OAuth client, credential path, o
 
 ## Permissions
 
-- Claude `dontAsk` denies operations that native policy has not already authorized.
+- Claude uses `permissionMode: dontAsk`, fixed for the provider instance and not inherited from any session. It denies operations that native policy has not already authorized.
+- Codex uses `workspace-write` plus `untrusted` as its static fallback. With `inheritSessionPermissions`, the session's sandbox and approval policy are inherited independently: any valid `sandbox/mode` is adopted, while only the DSH `never` approval policy is; every other policy keeps the fallback.
 - Copilot `permission: reject` declines every ACP permission request and the CLI receives an empty available-tool catalog.
 - Copilot custom instructions, built-in MCP servers, `ask_user`, remote control/export, and auto-update are disabled.
 - No child permission request is surfaced as a blocking human dialog.
@@ -26,7 +27,7 @@ The repository contains no direct Google provider, credentials, proxy, custom OA
 
 ## Codex dynamic-tool bridge
 
-`@softspark/dsh-codex` keeps its standalone `experimentalDynamicTools` default disabled. This bundle must follow dsh-codex in the DSH profile bundle order and replaces the complete `llm-codex` configuration with the reviewed orchestration settings: `workspace-write`, `untrusted`, `allowApiKeyAuth: false`, bounded request/turn/tool timeouts, and `experimentalDynamicTools: true`.
+`@softspark/dsh-codex` keeps its standalone `experimentalDynamicTools` and `inheritSessionPermissions` defaults disabled. This bundle must follow dsh-codex in the DSH profile bundle order and replaces the complete `llm-codex` configuration with the reviewed orchestration settings: `workspace-write` and `untrusted` fallbacks, `inheritSessionPermissions: true`, `allowApiKeyAuth: false`, bounded request/turn/tool timeouts, and `experimentalDynamicTools: true`. Inheritance needs dsh-codex 1.4.0 or newer; an older package keeps the unknown key and ignores it. A session running the DSH `danger-full-access` preset starts its Codex thread with `danger-full-access` and `never`, so the presets a profile offers are part of this boundary.
 
 The bridge only exposes the DSH tool catalog to the Codex app-server turn. DSH remains responsible for executing a selected tool and returning its correlated text result; dsh-codex does not call Claude, Copilot, or credentials directly. When no earlier `llm-codex` row exists, DSH warns and skips the override rather than creating a second or incomplete provider. Reordering or changing either bundle requires a new composition test and live subscription-backed smoke test.
 
