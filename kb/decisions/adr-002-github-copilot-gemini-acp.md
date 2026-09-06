@@ -2,6 +2,7 @@
 title: "ADR-002: Gemini Through GitHub Copilot ACP"
 category: decisions
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [dsh, github-copilot, gemini, acp, subscriptions]
 last_updated: "2026-08-27"
 created: "2026-08-27"

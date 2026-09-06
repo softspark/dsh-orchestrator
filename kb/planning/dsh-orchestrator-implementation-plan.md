@@ -2,6 +2,7 @@
 title: "dsh-orchestrator Implementation Plan"
 category: planning
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [planning, dsh, public-module, release, github-copilot, gemini]
 created: "2026-08-26"
 last_updated: "2026-09-04"

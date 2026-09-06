@@ -2,6 +2,7 @@
 title: "dsh-orchestrator Common Issues"
 category: troubleshooting
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [troubleshooting, dsh, claude-code, google, github-copilot, gemini]
 created: "2026-08-26"
 last_updated: "2026-09-04"

@@ -10,17 +10,18 @@ The package does not implement OAuth, read credential files, accept provider API
 
 ## Status
 
-Version `1.1.0` is the current release and targets DSH `0.1.1-rc.2`.
+Version `2.0.0` is a release candidate targeting DSH `0.1.2-rc.1`. The currently published `1.1.0` targets DSH `0.1.1-rc.2`. The [verification record](kb/procedures/verification-2026-09-06.md) distinguishes registry checks from candidate runtime checks.
 
-Verified locally: 15/15 tests, zero source, permission, and dependency findings, 460 verified registry signatures, and 58 attestations. The network-free suite composes this patch through DSH `0.1.1-rc.2` and verifies the complete Codex override, including that only the Codex row carries session permission inheritance. A fresh isolated pre-tag profile completed both `subagent_claude_code` and `subagent_gemini_copilot` marker roundtrips through native subscription logins on 2026-09-04; in that profile a Codex thread serving a `workspace-write` session was refused a write outside the workspace and the same request succeeded under a `danger-full-access` session, which is inheritance working end to end.
+Historical `1.1.0` pre-tag verification on 2026-09-04 passed 15 tests and both native delegation markers on DSH `0.1.1-rc.2`. It also checked session sandbox inheritance. These results do not certify the new candidate or substitute for its post-release tests.
 
 ## Requirements
 
 - Node.js 22.19.0 or newer.
 - npm for repository verification.
 - `pnpm` for the DSH profile plugin manager.
-- DeepSeek Harness `0.1.1-rc.2`.
-- `@softspark/dsh-codex@1.4.0` or newer installed before this bundle when Codex is the parent. Session permission inheritance needs 1.4.0; an older dsh-codex accepts the key and ignores it.
+- DeepSeek Harness `0.1.2-rc.1` for candidate `2.0.0`.
+- `@softspark/dsh-codex@1.5.0` installed before this bundle when Codex is the parent. Use the local candidate tarball until that version is published.
+- The [profile-level Claude SDK override](kb/howto/setup.md#3-apply-the-reviewed-claude-sdk-compatibility-override) to `0.3.263`. The DSH provider's bundled older CLI is refused by current Claude models even when the standalone CLI is up to date. Installing this package alone does not apply that override.
 - Claude Code authenticated through `claude auth login`.
 - GitHub Copilot CLI `1.0.80` or a separately reviewed compatible version, authenticated through `copilot login` with an active Copilot plan.
 
@@ -68,11 +69,11 @@ npm run package:check
 
 ## Local installation
 
-Use an isolated `DSH_HOME` before modifying a regular profile.
+Use an isolated `DSH_HOME` before modifying a regular profile. Apply the SDK override from the setup guide after installing dsh-codex and before installing this bundle.
 
 ```bash
-dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
-dsh plugin --profile web add "file:$(pwd)"
+dsh plugin --profile web add file:/path/to/softspark-dsh-codex-1.5.0.tgz --save-exact --ignore-scripts
+dsh plugin --profile web add "file:$(pwd)" --ignore-scripts
 
 PRESET_ROOT="${DSH_HOME:-$HOME/.dsh}/.agent-presets"
 test ! -e "$PRESET_ROOT/softspark-orchestrator"
@@ -84,7 +85,7 @@ Restart DSH, create a new session, and select `SoftSpark Orchestrator`. Existing
 
 ## Install a published release
 
-Install the exact reviewed version and copy its preset into the profile's user preset root:
+The current published pair below requires DSH `0.1.1-rc.2`. For DSH `0.1.2-rc.1`, use the local candidates above until both new versions are published. Copy the installed preset into the profile's user preset root:
 
 ```bash
 dsh plugin --profile web add @softspark/dsh-codex@1.4.0 --save-exact
@@ -99,7 +100,7 @@ cp -R "$PROFILE_ROOT/node_modules/@softspark/dsh-orchestrator/agent-presets/soft
   "$PRESET_ROOT/softspark-orchestrator"
 ```
 
-DSH `0.1.1-rc.2` discovers user presets only from configured roots and `$DSH_HOME/.agent-presets`; installing a bundle does not automatically add its embedded preset directory. Restart DSH, then select `SoftSpark Orchestrator` for a new session.
+Both supported release lines discover user presets from configured roots and `$DSH_HOME/.agent-presets`; installing a bundle does not automatically add its embedded preset directory. Restart DSH, then select `SoftSpark Orchestrator` for a new session.
 
 If dsh-orchestrator loads without an earlier `llm-codex` row, DSH logs
 `patch: entry "llm-codex" not found` and skips the override. It does not insert

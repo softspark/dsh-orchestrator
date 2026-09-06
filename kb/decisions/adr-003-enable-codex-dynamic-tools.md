@@ -2,6 +2,7 @@
 title: "ADR-003: Enable Codex Dynamic Tools in the Orchestrator Bundle"
 category: decisions
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [dsh, codex, dynamic-tools, composition, orchestration]
 created: "2026-08-31"
 last_updated: "2026-09-04"

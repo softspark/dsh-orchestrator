@@ -2,7 +2,10 @@
 
 ## Supported versions
 
-Version `1.1.0` receives security fixes on `main`.
+The latest published release receives security fixes on `main`. Version `1.1.0`
+is the published DSH `0.1.1-rc.2` line; `2.0.0` is the candidate for DSH
+`0.1.2-rc.1`. Check [CHANGELOG.md](CHANGELOG.md) and the
+[verification record](kb/procedures/verification-2026-09-06.md) before upgrading.
 
 ## Reporting a vulnerability
 

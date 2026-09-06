@@ -2,6 +2,7 @@
 title: "DSH Orchestrator Security Boundaries"
 category: reference
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [security, credentials, permissions, github-copilot, gemini]
 last_updated: "2026-09-04"
 created: "2026-08-26"

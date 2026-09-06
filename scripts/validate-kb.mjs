@@ -12,6 +12,7 @@ const requiredFields = [
   'title',
   'category',
   'service',
+  'version',
   'tags',
   'created',
   'last_updated',
@@ -145,7 +146,7 @@ function validateDocument(path, fields, errors) {
   for (const field of requiredFields) {
     if (!fields.has(field)) addError(errors, path, `missing required field "${field}"`);
   }
-  const strings = ['title', 'category', 'service', 'created', 'last_updated', 'description'];
+  const strings = ['title', 'category', 'service', 'version', 'created', 'last_updated', 'description'];
   for (const field of strings) {
     const value = fields.get(field);
     if (value !== undefined && (typeof value !== 'string' || value.trim().length === 0)) {

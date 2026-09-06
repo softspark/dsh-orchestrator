@@ -2,6 +2,7 @@
 title: "ADR-001: Native Subscription Subagents"
 category: decisions
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [dsh, claude-code, subscriptions, google, github-copilot]
 last_updated: "2026-08-27"
 created: "2026-08-26"

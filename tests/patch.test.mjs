@@ -51,9 +51,9 @@ test('public patch has no private absolute path', () => {
 });
 
 test('the Claude provider carries no session permission inheritance', () => {
-  // `@deepseek-ai/dsh-subagent-claude-code@0.1.1-rc.2` declares only
-  // providerName, env, permissionMode and disposeGraceMs, and resolves those
-  // four alone; `permissionMode` is fixed for the provider instance. An
+  // `@deepseek-ai/dsh-subagent-claude-code@0.1.2-rc.1` declares only
+  // providerName, model, env, permissionMode and disposeGraceMs, and resolves
+  // those alone; `permissionMode` is fixed for the provider instance. An
   // undeclared key is kept by schemastery rather than rejected, so the key
   // would survive composition, change nothing, and warn about nothing.
   const composed = composeEntries([parsedPatch], () => {});
@@ -67,7 +67,7 @@ test('the Claude provider carries no session permission inheritance', () => {
 });
 
 test('patch composes the complete Codex dynamic-tool config only after dsh-codex', () => {
-  assert.equal(dshManifest.version, '0.1.1-rc.2');
+  assert.equal(dshManifest.version, '0.1.2-rc.1');
 
   const warnings = [];
   const composed = composeEntries([

@@ -2,8 +2,9 @@
 title: "SOP: Release"
 category: procedures
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [sop, release, npm]
-last_updated: "2026-08-31"
+last_updated: "2026-09-06"
 created: "2026-08-26"
 description: "Prepare and publish a provenance-enabled dsh-orchestrator release."
 ---
@@ -19,6 +20,7 @@ Publish a reviewed package whose tag, manifest, documentation, and DSH compatibi
 - The first public release of every SoftSpark module is `1.0.0`; `0.x` tags and publications are forbidden. Subsequent releases follow Semantic Versioning from the latest published tag.
 - Green `main` branch and clean worktree.
 - Approved compatibility evidence for all exact DSH provider versions.
+- The profile-root Claude SDK override from the setup guide is applied and its effective dependency is verified. Repository `overrides` alone do not configure downstream profiles.
 - Reviewed provenance and live smoke evidence for the separately installed Copilot CLI version.
 - Fresh isolated-profile evidence that a Codex parent invoked `subagent_claude_code` and received the exact Claude child marker through the native Claude Code login.
 - Fresh isolated-profile evidence that a Codex parent invoked `subagent_gemini_copilot` and received the exact Gemini child marker through the native GitHub Copilot login.

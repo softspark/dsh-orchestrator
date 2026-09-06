@@ -2,6 +2,7 @@
 title: "SOP: Pre-Commit Verification"
 category: procedures
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [sop, pre-commit, verification]
 last_updated: "2026-08-31"
 created: "2026-08-26"

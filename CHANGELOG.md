@@ -2,6 +2,18 @@
 
 All notable changes follow Keep a Changelog and Semantic Versioning.
 
+## [2.0.0] - Unreleased
+
+### Changed
+
+- Require DSH `0.1.2-rc.1` and use its matching ACP and Claude Code providers. Upgrade the host and install the `dsh-codex@1.5.0` candidate before this bundle. Mixing new provider dependencies with DSH `0.1.1-rc.2` is unsupported.
+
+### Fixed
+
+- Qualify Claude Agent SDK `0.3.263` and document the required profile-root override. DSH's pinned SDK `0.3.241` embeds a Claude CLI too old for current models; upgrading the standalone CLI alone does not fix delegation.
+- Add reproducible registry provenance and signature checks to the post-release SOP; keep historical release smoke evidence separate from current candidate checks.
+- Add Dependabot Conventional Commit prefixes and refresh current setup requirements.
+
 ## [1.1.0] - 2026-09-04
 
 ### Added

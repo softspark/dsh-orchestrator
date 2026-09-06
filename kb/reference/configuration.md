@@ -2,8 +2,9 @@
 title: "DSH Orchestrator Configuration"
 category: reference
 service: dsh-orchestrator
+version: "1.0.0"
 tags: [configuration, dsh, claude-code, github-copilot, gemini, acp]
-last_updated: "2026-09-04"
+last_updated: "2026-09-06"
 created: "2026-08-26"
 description: "Exact provider and tool configuration contract for the orchestration bundle."
 ---
@@ -14,9 +15,10 @@ description: "Exact provider and tool configuration contract for the orchestrati
 
 | Dependency | Required version |
 |---|---|
-| `@deepseek-ai/dsh` peer | `0.1.1-rc.2` |
-| `@deepseek-ai/dsh-subagent-acp` | `0.1.1-rc.2` |
-| `@deepseek-ai/dsh-subagent-claude-code` | `0.1.1-rc.2` |
+| `@deepseek-ai/dsh` peer | `0.1.2-rc.1` |
+| `@deepseek-ai/dsh-subagent-acp` | `0.1.2-rc.1` |
+| `@deepseek-ai/dsh-subagent-claude-code` | `0.1.2-rc.1` |
+| Profile override of its `@anthropic-ai/claude-agent-sdk` | `0.3.263`; see the setup guide, repository overrides do not propagate to consumer profiles |
 | Companion `@softspark/dsh-codex` bundle | `1.0.0`, loaded earlier |
 
 ## Codex parent override
@@ -46,7 +48,7 @@ produces a DSH warning and skips the override. It does not insert a provider.
 
 With `inheritSessionPermissions`, a Codex thread follows the DSH session it serves, one knob at a time. The session's latest valid `sandbox/mode` becomes the thread sandbox; its latest `approval/policy` becomes Codex `never` only when the session policy is `never`, because app-server approvals have their own UI path. Missing, malformed, and unreadable state keeps both fallbacks, and permissions resolve once, when the thread is created.
 
-Claude registers as `claude-code`, uses `permissionMode: dontAsk`, and uses an empty explicit environment overlay. That mode is fixed for the provider instance: `@deepseek-ai/dsh-subagent-claude-code@0.1.1-rc.2` resolves only `providerName`, `env`, `permissionMode`, and `disposeGraceMs`, so no session state changes it. The official Agent SDK selects its packaged Claude Code executable.
+Claude registers as `claude-code`, uses `permissionMode: dontAsk`, and uses an empty explicit environment overlay. That mode is fixed for the provider instance: `@deepseek-ai/dsh-subagent-claude-code@0.1.2-rc.1` resolves `providerName`, optional `model`, `env`, `permissionMode`, and `disposeGraceMs`; it does not inherit session permissions. The official Agent SDK selects its packaged Claude Code executable.
 
 Copilot registers as `copilot-gemini`, launches `copilot --acp --stdio`, pins `gemini-3.6-flash`, rejects permission requests, and exposes no child tools. Remote features, custom instructions, built-in MCP servers, `ask_user`, and auto-update are disabled. The empty environment overlay prevents this bundle from forwarding credentials.
 
