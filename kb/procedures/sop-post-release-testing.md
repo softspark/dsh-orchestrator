@@ -25,7 +25,7 @@ Confirm that the published artifact registers Claude and Copilot ACP providers a
 
 ## Registry and installation gates
 
-Set `RELEASE_VERSION` to the exact published version and select its documented DSH and dsh-codex pair. Version `1.1.0` uses DSH `0.1.1-rc.2` and dsh-codex `1.4.0`; candidate `2.0.0` uses DSH `0.1.2-rc.1` and dsh-codex `1.5.0` after publication.
+Set `RELEASE_VERSION` to the exact published version and select its documented DSH and dsh-codex pair. Version `1.1.0` uses DSH `0.1.1-rc.2` and dsh-codex `1.4.0`; version `2.0.0` uses DSH `0.1.2-rc.1` and dsh-codex `1.5.0`.
 
 ```sh
 npm view "@softspark/dsh-orchestrator@$RELEASE_VERSION" version dist.integrity dist.attestations dist.signatures --json
