@@ -33,7 +33,8 @@
     "audit:permissions": "node scripts/audit.mjs --permissions",
     "audit:dependencies": "npm audit --audit-level=high --ignore-scripts",
     "audit:signatures": "npm audit signatures",
-    "package:check": "npm pack --dry-run --ignore-scripts"
+    "package:check": "npm pack --dry-run --ignore-scripts",
+    "release": "scripts/release.sh"
   },
   "dependencies": {
     "@deepseek-ai/dsh-subagent-acp": "0.1.2-rc.1",
